@@ -12,4 +12,4 @@ En Flask-applikasjon som leser et [Ruter-API](https://reisapi.ruter.no/help) og 
 
 # Eksempel
 URL: http://localhost:5000/?platforms=2&rows=4
-Resultat: ![Screenshot](screenshot.png)
+Resultat: ![Screenshot](/screenshot.png)
