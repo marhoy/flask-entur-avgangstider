@@ -10,3 +10,6 @@ En Flask-applikasjon som leser et [Ruter-API](https://reisapi.ruter.no/help) og 
 * `platforms`: Et tall som identifiserer plattformen du vil filtrere på. Du kan evt. spesifisere flere platformer ved å gjenta denne parameteren.
 * `max_rows`: Max antall avganger du ønsker å vise. Default 0 viser alle.
 
+# Eksempel
+URL: http://localhost:5000/?platforms=2&rows=4
+Resultat: ![Screenshot](screenshot.png)
