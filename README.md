@@ -11,5 +11,5 @@ En Flask-applikasjon som leser et [Ruter-API](https://reisapi.ruter.no/help) og 
 * `rows`: Max antall avganger du ønsker å vise. Default verdi 0 viser alle avganger som returneres av API'et.
 
 # Eksempel
-URL: http://localhost:5000/?id=3011310&platforms=2&rows=4
+URL: http://localhost:5000/?stopid=3011310&platforms=2&rows=4
 Resultat: ![Screenshot](screenshot.png)
