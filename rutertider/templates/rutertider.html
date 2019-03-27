@@ -22,10 +22,10 @@
             setInterval("deviationRepeater()", 60000);
         });
         function repeater() {
-            $("#DepartureTable").load(window.location.href + 'departure_table?{{ query }}');
+            $("#DepartureTable").load(window.location.pathname + 'departure_table?{{ query }}');
         }
         function deviationRepeater() {
-            $("#Deviations").load(window.location.href + 'deviations?{{ query }}');
+            $("#Deviations").load(window.location.pathname + 'deviations?{{ query }}');
         }
     </script>
 
