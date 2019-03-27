@@ -15,6 +15,8 @@ def get_ruter_departures(stopid=DEFAULT_RUTER_STOPID, platforms=None, lines=None
     if lines is None:
         lines = []
 
+    platforms.append(None)
+
     url = DEPARTURE_URL + stopid
     response = requests.get(url)
     response.raise_for_status()
@@ -33,6 +35,9 @@ def get_ruter_departures(stopid=DEFAULT_RUTER_STOPID, platforms=None, lines=None
             continue
         if max_rows and (len(departures) >= max_rows):
             break
+
+        if platform is None:
+            destination += ' (?)'
 
         departure_time = datetime.datetime.fromisoformat(departure_time)
         now = datetime.datetime.now(tz=departure_time.tzinfo)
