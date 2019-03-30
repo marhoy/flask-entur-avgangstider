@@ -3,6 +3,7 @@ body {
 	color: #FFF;
 	background-color: #000;
 	font-size: 20px;
+	margin: 0px;
 }
 table {
 	border-collapse:collapse;
@@ -137,10 +138,10 @@ td.devi {
 }
 #Deviations {
 	position:absolute;
-	left: 0px;  /* ny for å fjerne 10 px marg arvet fra et eller annet sted */
-    background: black;   /* ny for å hinder at teksten bak skinner igjennom og det blir helt uleselig */
-	bottom:0px;
-    padding-bottom:20px;
+	left: 10px;
+    background: black;
+	bottom:5px;
+    padding-bottom: 0px;
 }
 .devi-header 
 {

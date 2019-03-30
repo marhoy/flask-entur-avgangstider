@@ -24,4 +24,5 @@ def departure_table():
 
 @app.route('/deviations')
 def deviations():
-    return ""
+    situations = entur_api.get_situations(line=entur_api.DEFAULT_LINE)
+    return situations[0]

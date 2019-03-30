@@ -4,6 +4,9 @@ Jernbanetorget: NSR:StopPlace:3990
 Godlia stasjon: NSR:StopPlace:5968
 - Retning Sentrum: NSR:Quay:10949
 - Retning Mortensrud: NSR:Quay:10948
+- Linje 3: "RUT:Line:3"
+
+
 
 {
 	stopPlace(id: "NSR:StopPlace:5968") {
