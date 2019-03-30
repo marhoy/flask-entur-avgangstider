@@ -3,7 +3,9 @@ body {
 	color: #FFF;
 	background-color: #000;
 	font-size: 20px;
-	margin: 0px;
+	margin-top: 4px;
+	margin-bottom: 0px;
+	margin-left: 0px;
 }
 table {
 	border-collapse:collapse;
