@@ -9,6 +9,9 @@ DEFAULT_LINE = "RUT:Line:3"
 
 QUERY_URL = 'https://api.entur.io/journey-planner/v2/graphql'
 
+# For testing of queries, use this page:
+# https://api.entur.org/doc/shamash-journeyplanner/
+
 DEPARTURE_QUERY = """{
   stopPlace(id: STOP_PLACE) {
     name
