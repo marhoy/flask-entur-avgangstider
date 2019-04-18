@@ -1,8 +1,8 @@
-FROM balenalib/%%BALENA_MACHINE_NAME%%-python:3.7
+FROM balenalib/%%BALENA_MACHINE_NAME%%-alpine-python:3.7
 
 # Run everything as a non-privileged user
 ENV USERNAME flask
-RUN useradd -m $USERNAME
+RUN addgroup -S $USERNAME && adduser -S $USERNAME -G $USERNAME 
 USER $USERNAME
 
 # Set home directory as workdir
