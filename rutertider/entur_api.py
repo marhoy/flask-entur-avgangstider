@@ -19,7 +19,7 @@ def get_departures(stop_id, platforms=None, lines=None,
     """Query the API and return a list of matching departures
 
     Args:
-        stopid:
+        stop_id:
         platforms:
         lines:
         max_departures (int):
@@ -44,7 +44,7 @@ def get_departures(stop_id, platforms=None, lines=None,
         # Extract the elements we want from the response
         line_name = journey['serviceJourney']['line']['publicCode']
         bg_color = journey['serviceJourney']['line']['presentation']['colour']
-        fg_color = journey['serviceJourney']['line']['presentation']['textColour']
+        fg_color = journey['serviceJourney']['line']['presentation']['textColour']  # noqa
         platform = journey['quay']['id']
         destination = journey['destinationDisplay']['frontText']
         departure_time_string = journey['expectedDepartureTime']
@@ -54,8 +54,6 @@ def get_departures(stop_id, platforms=None, lines=None,
             continue
         if lines and (line_name not in lines):
             continue
-#        if max_rows and (len(departures) >= max_rows):
-#            break
 
         # Format departure string and add a departure to the list
         departure_string = utils.format_departure_string(departure_time_string)

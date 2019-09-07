@@ -13,12 +13,12 @@ def iso_str_to_datetime(timestamp_str):
 
     Examples:
         >>> iso_str_to_datetime('2019-01-02T03:04:05+0200')
-        datetime.datetime(2019, 1, 2, 3, 4, 5, tzinfo=datetime.timezone(
-        datetime.timedelta(seconds=7200)))
+        datetime.datetime(2019, 1, 2, 3, 4, 5,
+        tzinfo=datetime.timezone(datetime.timedelta(seconds=7200)))
 
         >>> iso_str_to_datetime('2019-01-02T03:04:05+02:00')
-        datetime.datetime(2019, 1, 2, 3, 4, 5, tzinfo=datetime.timezone(
-        datetime.timedelta(seconds=7200)))
+        datetime.datetime(2019, 1, 2, 3, 4, 5,
+        tzinfo=datetime.timezone(datetime.timedelta(seconds=7200)))
     """
     # If the timezone info is e.g. +0200, change to +02:00
     timestamp_str = re.sub(r'0(\d)00', r'0\1:00', timestamp_str)
