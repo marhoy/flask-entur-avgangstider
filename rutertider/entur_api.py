@@ -1,140 +1,100 @@
 import datetime
-import re
-import requests
+from dataclasses import dataclass
+
+from rutertider import entur_query, utils
 
 
-DEFAULT_STOPID = "NSR:StopPlace:5968"
-DEFAULT_QUAYS = ["NSR:Quay:10949"]
-DEFAULT_LINE = "RUT:Line:3"
-
-QUERY_URL = 'https://api.entur.io/journey-planner/v2/graphql'
-
-# For testing of queries, use this page:
-# https://api.entur.org/doc/shamash-journeyplanner/
-
-DEPARTURE_QUERY = """{
-  stopPlace(id: STOP_PLACE) {
-    name
-    estimatedCalls(numberOfDepartures: 10) {
-      quay {
-        id
-        description
-      }
-      expectedArrivalTime
-      actualArrivalTime
-      expectedDepartureTime
-      actualDepartureTime
-      realtime
-      realtimeState
-      destinationDisplay {
-        frontText
-      }
-      serviceJourney {
-        line {
-          publicCode
-          presentation {
-            colour
-            textColour
-          }
-        }
-      }
-    }
-  }
-}
-"""
-
-SITUATION_QUERY = """
-{
-  line(id: LINE_ID) {
-    id
-    situations {
-      summary {
-        value
-      }
-      description {
-        value
-      }
-      detail {
-        value
-      }
-      validityPeriod {
-        startTime
-        endTime
-      }
-    }
-  }
-}"""
+@dataclass
+class Departure:
+    """A class to hold departure-info"""
+    line_name: str
+    destination: str
+    departure_time: str
+    bg_color: str
+    fg_color: str
 
 
-def str_to_datetime(str):
-    str = re.sub(r'0(\d)00', r'0\1:00', str)
-    return datetime.datetime.fromisoformat(str)
+def get_departures(stop_id, platforms=None, lines=None,
+                   max_departures=None):
+    """Query the API and return a list of matching departures
 
+    Args:
+        stopid:
+        platforms:
+        lines:
+        max_departures (int):
 
-def get_departures(stopid=DEFAULT_STOPID, platforms=None, lines=None, max_rows=0):
-
+    Returns:
+        A list of departures
+    """
+    # Handle optional arguments
     if platforms is None:
         platforms = []
     if lines is None:
         lines = []
 
-    headers = {'ET-Client-Name': 'marhoy - dashboard'}
-    query = DEPARTURE_QUERY.replace('STOP_PLACE', '"{}"'.format(stopid))
-    response = requests.post(QUERY_URL, headers=headers, json={'query': query})
-    response.raise_for_status()
+    # Get response from Entur API
+    query = entur_query.create_departure_query(stop_id=stop_id,
+                                               max_departures=max_departures)
+    response = entur_query.journey_planner_api(query)
 
     departures = []
     for journey in response.json()['data']['stopPlace']['estimatedCalls']:
+
+        # Extract the elements we want from the response
         line_name = journey['serviceJourney']['line']['publicCode']
-        line_color = journey['serviceJourney']['line']['presentation']['colour']
+        bg_color = journey['serviceJourney']['line']['presentation']['colour']
+        fg_color = journey['serviceJourney']['line']['presentation']['textColour']
         platform = journey['quay']['id']
         destination = journey['destinationDisplay']['frontText']
-        departure_time = journey['expectedDepartureTime']
+        departure_time_string = journey['expectedDepartureTime']
 
+        # Skip unwanted platforms / lines and break after max_rows
         if platforms and (platform not in platforms):
             continue
         if lines and (line_name not in lines):
             continue
-        if max_rows and (len(departures) >= max_rows):
-            break
+#        if max_rows and (len(departures) >= max_rows):
+#            break
 
-        departure_time = str_to_datetime(departure_time)
-        now = datetime.datetime.now(tz=departure_time.tzinfo)
-        minutes = (departure_time - now).total_seconds() / 60
-        minutes = round(minutes)
-
-        if minutes <= 0:
-            arrival_string = 'nå'
-        elif minutes <= 30:
-            arrival_string = "{} min".format(minutes)
-        else:
-            arrival_string = "{:02}:{:02}".format(departure_time.hour, departure_time.minute)
-
-        departures.append({'line_name': line_name,
-                           'line_color': line_color,
-                           'destination': destination,
-                           'departure_time': arrival_string})
+        # Format departure string and add a departure to the list
+        departure_string = utils.format_departure_string(departure_time_string)
+        departure = Departure(line_name=line_name,
+                              destination=destination,
+                              departure_time=departure_string,
+                              fg_color=fg_color,
+                              bg_color=bg_color)
+        departures.append(departure)
 
     return departures
 
 
-def get_situations(line=DEFAULT_LINE):
+def get_situations(line):
+    """Query the Entur API and return a list of relevant situations
 
-    headers = {'ET-Client-Name': 'marhoy - dashboard'}
-    query = SITUATION_QUERY.replace('LINE_ID', '"{}"'.format(line))
-    response = requests.post(QUERY_URL, headers=headers, json={'query': query})
-    response.raise_for_status()
+    Args:
+        line:
+
+    Returns:
+
+    """
+    query = entur_query.create_situation_query(line)
+    response = entur_query.journey_planner_api(query)
 
     situations = []
-
     for situation in response.json()['data']['line']['situations']:
+
+        # Extract the fields we need from the response
         start_time = situation['validityPeriod']['startTime']
         end_time = situation['validityPeriod']['endTime']
-        start_time = str_to_datetime(start_time)
-        end_time = str_to_datetime(end_time)
+
+        # Find start, end and current timestamp
+        start_time = utils.iso_str_to_datetime(start_time)
+        end_time = utils.iso_str_to_datetime(end_time)
         now = datetime.datetime.now(tz=start_time.tzinfo)
 
+        # Add relevant situations to the list
         if start_time < now < end_time:
             situations.append(situation['summary'][0]['value'])
 
-    return situations
+    return sorted(situations)
