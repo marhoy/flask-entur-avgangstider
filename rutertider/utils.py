@@ -21,7 +21,7 @@ def iso_str_to_datetime(timestamp_str):
         tzinfo=datetime.timezone(datetime.timedelta(seconds=7200)))
     """
     # If the timezone info is e.g. +0200, change to +02:00
-    timestamp_str = re.sub(r'0(\d)00', r'0\1:00', timestamp_str)
+    timestamp_str = re.sub(r'(\d{2,})(\d{2,})$', r'\1:\2', timestamp_str)
     return datetime.fromisoformat(timestamp_str)
 
 
@@ -37,16 +37,12 @@ def format_departure_string(departure_timestamp_string):
     # How long is it to the departure?
     departure_time = iso_str_to_datetime(departure_timestamp_string)
     now = datetime.now(tz=departure_time.tzinfo)
-    print(now)
-    print(departure_time)
-    minutes = (departure_time - now).total_seconds() // 60
+    minutes = int((departure_time - now).total_seconds() // 60)
     if minutes <= 0:
         departure_string = 'nå'
     elif minutes <= 30:
         departure_string = "{} min".format(minutes)
     else:
-        departure_string = "{:02}:{:02}".format(
-            departure_time.hour,
-            departure_time.minute)
+        departure_string = departure_time.strftime("%H:%M")
 
     return departure_string
