@@ -37,8 +37,9 @@ def format_departure_string(departure_timestamp_string):
     # How long is it to the departure?
     departure_time = iso_str_to_datetime(departure_timestamp_string)
     now = datetime.now(tz=departure_time.tzinfo)
-    minutes = round((departure_time - now).total_seconds() / 60)
-
+    print(now)
+    print(departure_time)
+    minutes = (departure_time - now).total_seconds() // 60
     if minutes <= 0:
         departure_string = 'nå'
     elif minutes <= 30:
