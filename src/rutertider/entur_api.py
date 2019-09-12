@@ -9,6 +9,7 @@ class Departure:
     """A data class to hold departure info"""
     line_name: str
     destination: str
+    platform: str
     departure_time: str
     bg_color: str
     fg_color: str
@@ -60,6 +61,7 @@ def get_departures(stop_id, platforms=None, lines=None,
         departure = Departure(line_name=line_name,
                               destination=destination,
                               departure_time=departure_string,
+                              platform=platform,
                               fg_color=fg_color,
                               bg_color=bg_color)
         departures.append(departure)
