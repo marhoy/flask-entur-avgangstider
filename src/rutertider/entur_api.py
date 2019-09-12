@@ -6,7 +6,7 @@ from rutertider import entur_query, utils
 
 @dataclass
 class Departure:
-    """A class to hold departure-info"""
+    """A data class to hold departure info"""
     line_name: str
     destination: str
     departure_time: str

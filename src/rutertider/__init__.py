@@ -1,5 +1,5 @@
 import flask
-from . import entur_api
+from rutertider import entur_api
 
 app = flask.Flask(__name__)
 
