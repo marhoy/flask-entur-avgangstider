@@ -1,21 +1,22 @@
 [tool.poetry]
 name = "rutertider"
 version = "0.1.0"
-description = "Avgangstider for Ruter"
+description = "Avgangstider fra EnTur"
 authors = ["Martin Høy <marhoy@gmail.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.7"
-Flask = "^1.1"
+flask = "^1.1"
 requests = "^2.22"
-tox = "^3.14"
-sphinx = "^2.2"
 
 [tool.poetry.dev-dependencies]
+sphinx = "^2.2"
 pytest = "^5.1"
 pytest-cov = "^2.7"
-flake8 = "^3.7"
 pytest-mock = "^1.10"
+pytest-flask = "^0.15.0"
+flake8 = "^3.7"
+tox = "^3.14"
 
 [build-system]
 requires = ["poetry>=0.12"]
