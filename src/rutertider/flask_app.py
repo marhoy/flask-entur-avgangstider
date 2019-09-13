@@ -24,12 +24,12 @@ def _situation_generator(line_ids):
         situation = next(gen)
     """
     while True:
-        situations = [sit for line_id in line_ids for sit in
+        situations = [sit.summary for line_id in line_ids for sit in
                       entur_api.get_situations(line_id)]
+        if not situations:
+            yield ''
         for sit in situations:
             yield sit
-        else:
-            yield ''
 
 
 def create_app():

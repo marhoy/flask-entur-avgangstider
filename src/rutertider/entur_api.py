@@ -15,6 +15,17 @@ class Departure:
     fg_color: str
 
 
+@dataclass
+class Situation:
+    """A data class to hold situations for a line id"""
+    line_id: str
+    line_name: str
+    transport_mode: str
+    bg_color: str
+    fg_color: str
+    summary: str
+
+
 def get_departures(stop_id, platforms=None, lines=None,
                    max_departures=None):
     """Query the API and return a list of matching departures
@@ -82,13 +93,19 @@ def get_situations(line_id, language='no'):
         A list of relevant situations for that line
     """
     query = entur_query.create_situation_query(line_id)
-    response = entur_query.journey_planner_api(query)
+    json = entur_query.journey_planner_api(query).json()
+
+    # Extract some general information about the line
+    line_name = json['data']['line']['publicCode']
+    transport_mode = json['data']['line']['transportMode']
+    fg_color = json['data']['line']['presentation']['textColour']
+    bg_color = json['data']['line']['presentation']['colour']
 
     situations = []
-    if not response.json()['data']['line']:
+    if not json['data']['line']:
         # There is no data for this line, maybe its not a valid ID?
         return []
-    for situation in response.json()['data']['line']['situations']:
+    for situation in json['data']['line']['situations']:
 
         # Extract the fields we need from the response
         start_time = situation['validityPeriod']['startTime']
@@ -103,6 +120,13 @@ def get_situations(line_id, language='no'):
         if start_time < now < end_time:
             for summary in situation['summary']:
                 if summary['language'] == language:
-                    situations.append(summary['value'])
+                    situations.append(Situation(
+                        line_id=line_id,
+                        line_name=line_name,
+                        transport_mode=transport_mode,
+                        fg_color=fg_color,
+                        bg_color=bg_color,
+                        summary=summary['value']
+                    ))
 
     return sorted(situations)
