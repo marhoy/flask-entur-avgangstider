@@ -33,6 +33,8 @@ def get_departures(stop_id, platforms=None, lines=None,
         platforms = []
     if lines is None:
         lines = []
+    if max_departures is None:
+        max_departures = 5
 
     # Get response from Entur API
     query = entur_query.create_departure_query(stop_id=stop_id,
@@ -50,7 +52,7 @@ def get_departures(stop_id, platforms=None, lines=None,
         destination = journey['destinationDisplay']['frontText']
         departure_time_string = journey['expectedDepartureTime']
 
-        # Skip unwanted platforms / lines and break after max_rows
+        # Skip unwanted platforms / lines
         if platforms and (platform not in platforms):
             continue
         if lines and (line_name not in lines):
@@ -69,19 +71,23 @@ def get_departures(stop_id, platforms=None, lines=None,
     return departures
 
 
-def get_situations(line):
+def get_situations(line_id, language='no'):
     """Query the Entur API and return a list of relevant situations
 
     Args:
-        line:
+        line_id: A string with a valid line id
+        language: A language string: 'en' or 'no'
 
     Returns:
-
+        A list of relevant situations for that line
     """
-    query = entur_query.create_situation_query(line)
+    query = entur_query.create_situation_query(line_id)
     response = entur_query.journey_planner_api(query)
 
     situations = []
+    if not response.json()['data']['line']:
+        # There is no data for this line, maybe its not a valid ID?
+        return []
     for situation in response.json()['data']['line']['situations']:
 
         # Extract the fields we need from the response
@@ -95,6 +101,8 @@ def get_situations(line):
 
         # Add relevant situations to the list
         if start_time < now < end_time:
-            situations.append(situation['summary'][0]['value'])
+            for summary in situation['summary']:
+                if summary['language'] == language:
+                    situations.append(summary['value'])
 
     return sorted(situations)

@@ -1,12 +1,13 @@
-import requests
 import random
+
+import requests
 
 
 # For testing of queries, use this page:
 # https://api.entur.org/doc/shamash-journeyplanner/
 
 
-def create_departure_query(stop_id, max_departures=5):
+def create_departure_query(stop_id, max_departures=10):
     """Create a GraphQL query, finding all departures for a specific stop_id
 
     Args:
@@ -64,15 +65,24 @@ def create_situation_query(line_id):
     {
       line(id: "LINE_ID") {
         id
+        publicCode
+        transportMode
+        presentation {
+          colour
+          textColour
+        }
         situations {
           summary {
             value
+            language
           }
           description {
             value
+            language
           }
-          detail {
+          advice {
             value
+            language
           }
           validityPeriod {
             startTime

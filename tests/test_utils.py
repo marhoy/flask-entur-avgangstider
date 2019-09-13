@@ -5,6 +5,7 @@ from rutertider.utils import iso_str_to_datetime
 
 
 class FixedDateTime:
+    """A mock of datetime that provides a fixed value for now()"""
     def __init__(self, iso_string):
         self.timestamp = datetime.fromisoformat(iso_string)
 
@@ -34,11 +35,6 @@ def test_util():
     string = rutertider.utils.format_departure_string(
         departure.isoformat())
     assert string == 'nå'
-
-    departure = mocked_now + timedelta(minutes=12)
-    string = rutertider.utils.format_departure_string(
-        departure.isoformat())
-    assert string == '12 min'
 
     departure = mocked_now + timedelta(minutes=30)
     string = rutertider.utils.format_departure_string(
