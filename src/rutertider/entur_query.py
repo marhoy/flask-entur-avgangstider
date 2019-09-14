@@ -2,7 +2,6 @@ import random
 
 import requests
 
-
 # For testing of queries, use this page:
 # https://api.entur.org/doc/shamash-journeyplanner/
 

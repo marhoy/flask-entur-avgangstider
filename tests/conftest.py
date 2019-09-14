@@ -4,6 +4,7 @@ import os.path
 from datetime import datetime
 
 import pytest
+
 import rutertider
 
 LOG = logging.getLogger(__name__)
