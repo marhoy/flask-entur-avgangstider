@@ -1,6 +1,6 @@
 import flask
 
-from rutertider import entur_api
+import rutertider
 
 DEFAULT_STOPID = "NSR:StopPlace:5968"
 DEFAULT_QUAYS = ["NSR:Quay:10949"]
@@ -25,7 +25,7 @@ def _situation_generator(line_ids):
     """
     while True:
         situations = [sit.summary for line_id in line_ids for sit in
-                      entur_api.get_situations(line_id)]
+                      rutertider.get_situations(line_id)]
         if not situations:
             yield ''
         for sit in situations:
@@ -47,21 +47,21 @@ def create_app():
         stop_id = flask.request.args.get('stop_id', type=str,
                                          default=DEFAULT_STOPID)
         platforms = flask.request.args.getlist('platforms', type=str)
-        lines = flask.request.args.getlist('lines', type=str)
+        line_ids = flask.request.args.getlist('line_ids', type=str)
         max_departures = flask.request.args.get('max_departures', type=int,
                                                 default=10)
 
         # Create a list of relevant departures
-        departures = entur_api.get_departures(stop_id=stop_id,
-                                              platforms=platforms,
-                                              lines=lines,
-                                              max_departures=max_departures)
+        departures = rutertider.get_departures(stop_id=stop_id,
+                                               platforms=platforms,
+                                               line_ids=line_ids,
+                                               max_departures=max_departures)
         return flask.render_template("departure_table.html",
                                      departures=departures)
 
     @app.route('/deviations')
     def deviations():
-        situations = _situation_generator(line_ids=[DEFAULT_LINE])
-        return next(situations)
+        situation_gen = _situation_generator(line_ids=[DEFAULT_LINE])
+        return next(situation_gen)
 
     return app

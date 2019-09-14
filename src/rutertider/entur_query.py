@@ -37,6 +37,7 @@ def create_departure_query(stop_id, max_departures=10):
           }
           serviceJourney {
             line {
+              id
               publicCode
               presentation {
                 colour

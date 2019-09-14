@@ -1,12 +1,17 @@
-import datetime
+import logging
 from dataclasses import dataclass
+from datetime import datetime
 
 from rutertider import entur_query, utils
+
+# Module wide logger
+LOG = logging.getLogger(__name__)
 
 
 @dataclass
 class Departure:
     """A data class to hold departure info"""
+    line_id: str
     line_name: str
     destination: str
     platform: str
@@ -26,14 +31,14 @@ class Situation:
     summary: str
 
 
-def get_departures(stop_id, platforms=None, lines=None,
+def get_departures(stop_id, platforms=None, line_ids=None,
                    max_departures=None):
     """Query the API and return a list of matching departures
 
     Args:
         stop_id:
         platforms:
-        lines:
+        line_ids:
         max_departures (int):
 
     Returns:
@@ -42,8 +47,8 @@ def get_departures(stop_id, platforms=None, lines=None,
     # Handle optional arguments
     if platforms is None:
         platforms = []
-    if lines is None:
-        lines = []
+    if line_ids is None:
+        line_ids = []
     if max_departures is None:
         max_departures = 5
 
@@ -56,6 +61,7 @@ def get_departures(stop_id, platforms=None, lines=None,
     for journey in response.json()['data']['stopPlace']['estimatedCalls']:
 
         # Extract the elements we want from the response
+        line_id = journey['serviceJourney']['line']['id']
         line_name = journey['serviceJourney']['line']['publicCode']
         bg_color = journey['serviceJourney']['line']['presentation']['colour']
         fg_color = journey['serviceJourney']['line']['presentation']['textColour']  # noqa
@@ -66,12 +72,13 @@ def get_departures(stop_id, platforms=None, lines=None,
         # Skip unwanted platforms / lines
         if platforms and (platform not in platforms):
             continue
-        if lines and (line_name not in lines):
+        if line_ids and (line_id not in line_ids):
             continue
 
         # Format departure string and add a departure to the list
         departure_string = utils.format_departure_string(departure_time_string)
-        departure = Departure(line_name=line_name,
+        departure = Departure(line_id=line_id,
+                              line_name=line_name,
                               destination=destination,
                               departure_time=departure_string,
                               platform=platform,
@@ -95,6 +102,13 @@ def get_situations(line_id, language='no'):
     query = entur_query.create_situation_query(line_id)
     json = entur_query.journey_planner_api(query).json()
 
+    LOG.debug("JSON response: %s", json)
+
+    # Return an empty list if there is no data
+    if not json['data']['line']:
+        LOG.warning("No data for line %s", line_id)
+        return []
+
     # Extract some general information about the line
     line_name = json['data']['line']['publicCode']
     transport_mode = json['data']['line']['transportMode']
@@ -102,9 +116,6 @@ def get_situations(line_id, language='no'):
     bg_color = json['data']['line']['presentation']['colour']
 
     situations = []
-    if not json['data']['line']:
-        # There is no data for this line, maybe its not a valid ID?
-        return []
     for situation in json['data']['line']['situations']:
 
         # Extract the fields we need from the response
@@ -114,7 +125,7 @@ def get_situations(line_id, language='no'):
         # Find start, end and current timestamp
         start_time = utils.iso_str_to_datetime(start_time)
         end_time = utils.iso_str_to_datetime(end_time)
-        now = datetime.datetime.now(tz=start_time.tzinfo)
+        now = datetime.now(tz=start_time.tzinfo)
 
         # Add relevant situations to the list
         if start_time < now < end_time:
