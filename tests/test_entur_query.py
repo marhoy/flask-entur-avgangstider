@@ -1,5 +1,6 @@
-from rutertider.entur_query import create_departure_query, \
-    create_situation_query, journey_planner_api
+from rutertider.entur_query import (create_departure_query,
+                                    create_situation_query,
+                                    journey_planner_api)
 
 
 def test_create_departure_query():

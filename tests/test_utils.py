@@ -4,19 +4,6 @@ import rutertider.utils
 from rutertider.utils import iso_str_to_datetime
 
 
-class FixedDateTime:
-    """A mock of datetime that provides a fixed value for now()"""
-    def __init__(self, iso_string):
-        self.timestamp = datetime.fromisoformat(iso_string)
-
-    def now(self, tz=None):
-        return self.timestamp
-
-    @staticmethod
-    def fromisoformat(string):
-        return datetime.fromisoformat(string)
-
-
 def test_iso_str_to_datetime():
     from datetime import datetime, timezone, timedelta
     timestamp = datetime(2019, 1, 2, 3, 4, 5,
@@ -25,12 +12,13 @@ def test_iso_str_to_datetime():
     assert iso_str_to_datetime('2019-01-02T03:04:05+02:00') == timestamp
 
 
-def test_util():
+def test_util(fixed_datetime):
+    # Replace datetime in utils with a mocked class
     mocked_now_string = '2019-01-01T12:00:00+01:00'
     mocked_now = datetime.fromisoformat(mocked_now_string)
+    rutertider.utils.datetime = fixed_datetime(mocked_now_string)
 
-    rutertider.utils.datetime = FixedDateTime(mocked_now_string)
-
+    # Check the departure string for different timedelta's
     departure = mocked_now + timedelta(seconds=59)
     string = rutertider.utils.format_departure_string(
         departure.isoformat())

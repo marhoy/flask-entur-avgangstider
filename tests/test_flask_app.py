@@ -1,10 +1,10 @@
-import json
-import os.path
 from unittest import mock
 
 
 def test_app(client):
-    assert client.get('/').status_code == 200
+    response = client.get('/')
+    assert response.status_code == 200
+    assert response.data.decode('UTF-8').find('DepartureTable')
 
 
 def test_departure_table(client):
@@ -12,13 +12,10 @@ def test_departure_table(client):
 
 
 @mock.patch('rutertider.entur_api.entur_query')
-def test_deviations(mocked_query, client):
+def test_deviations(mocked_query, client, saved_situation):
     # Run once without mocking
     assert client.get('/deviations').status_code == 200
 
     # Mock situation and run again
-    with open(os.path.join(os.path.dirname(__file__), "data",
-                           "situation.json")) as file:
-        json_data = json.load(file)
-    mocked_query.journey_planner_api().json.return_value = json_data
+    mocked_query.journey_planner_api().json.return_value = saved_situation
     assert client.get('/deviations').status_code == 200

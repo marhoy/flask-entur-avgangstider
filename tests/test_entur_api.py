@@ -1,23 +1,6 @@
-import json
-import os.path
-from datetime import datetime
 from unittest import mock
 
 import rutertider
-
-
-class FixedDateTime:
-    """A mock of datetime that provides a fixed value for now()"""
-
-    def __init__(self, iso_string):
-        self.timestamp = datetime.fromisoformat(iso_string)
-
-    def now(self, tz=None):
-        return self.timestamp
-
-    @staticmethod
-    def fromisoformat(string):
-        return datetime.fromisoformat(string)
 
 
 def test_get_departures():
@@ -53,14 +36,10 @@ def test_get_situations():
 
 
 @mock.patch('rutertider.entur_api.entur_query')
-def test_get_situations_mocked(mocked_json):
-    with open(os.path.join(os.path.dirname(__file__), "data",
-                           "situation.json")) as file:
-        json_data = json.load(file)
-    mocked_json.journey_planner_api().json.return_value = json_data
-
-    mocked_now_string = '2019-09-13T20:00:00+02:00'
-    rutertider.entur_api.datetime = FixedDateTime(mocked_now_string)
+def test_get_situations_mocked(entur_query, saved_situation, fixed_datetime):
+    # Fake datetime.now() and the situations
+    entur_query.journey_planner_api().json.return_value = saved_situation
+    rutertider.entur_api.datetime = fixed_datetime('2019-09-13T20:00:00+02:00')
 
     situations = rutertider.get_situations("RUT:Line:120")
     assert len(situations) == 1
