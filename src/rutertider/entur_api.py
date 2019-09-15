@@ -19,6 +19,10 @@ class Departure:
     bg_color: str
     fg_color: str
 
+    def __str__(self):
+        return "{} -> {} @ {}".format(self.line_name, self.destination,
+                                      self.departure_time)
+
 
 @dataclass
 class Situation:
@@ -53,8 +57,12 @@ def get_departures(stop_id, platforms=None, line_ids=None,
         max_departures = 5
 
     # Get response from Entur API
-    query = entur_query.create_departure_query(stop_id=stop_id,
-                                               max_departures=max_departures)
+    if line_ids:
+        query = entur_query.create_departure_query_whitelist(
+            stop_id=stop_id, line_ids=line_ids, max_departures=max_departures)
+    else:
+        query = entur_query.create_departure_query(
+            stop_id=stop_id, max_departures=max_departures)
     response = entur_query.journey_planner_api(query)
 
     departures = []
@@ -69,10 +77,8 @@ def get_departures(stop_id, platforms=None, line_ids=None,
         destination = journey['destinationDisplay']['frontText']
         departure_time_string = journey['expectedDepartureTime']
 
-        # Skip unwanted platforms / lines
+        # Skip unwanted platforms
         if platforms and (platform not in platforms):
-            continue
-        if line_ids and (line_id not in line_ids):
             continue
 
         # Format departure string and add a departure to the list

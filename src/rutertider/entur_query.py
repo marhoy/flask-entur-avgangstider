@@ -25,8 +25,6 @@ def create_departure_query(stop_id, max_departures=10):
             id
             description
           }
-          expectedArrivalTime
-          actualArrivalTime
           expectedDepartureTime
           actualDepartureTime
           realtime
@@ -49,6 +47,45 @@ def create_departure_query(stop_id, max_departures=10):
     }
     """.replace('STOP_PLACE', stop_id).\
         replace('MAX_DEPARTURES', str(max_departures))
+    return departure_query
+
+
+def create_departure_query_whitelist(stop_id, line_ids, max_departures=5):
+    departure_query = """
+    {
+      stopPlace(id: "STOP_PLACE") {
+        name
+            estimatedCalls(
+          numberOfDepartures: MAX_DEPARTURES
+          whiteListed: {
+                lines: LIST_OF_LINE_IDS
+            }
+        ) {
+          expectedArrivalTime
+          expectedDepartureTime
+          quay {
+            id
+            description
+          }
+          destinationDisplay {
+            frontText
+          }
+                serviceJourney {
+            line {
+              id
+              publicCode
+              presentation {
+                colour
+                textColour
+              }
+                    }
+          }
+        }
+      }
+    }
+    """.replace('STOP_PLACE', stop_id). \
+        replace('MAX_DEPARTURES', str(max_departures)). \
+        replace('LIST_OF_LINE_IDS', str(line_ids).replace("'", '"'))
     return departure_query
 
 

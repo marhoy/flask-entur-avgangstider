@@ -1,3 +1,5 @@
+import logging
+
 import flask
 
 import rutertider
@@ -6,62 +8,107 @@ DEFAULT_STOPID = "NSR:StopPlace:5968"
 DEFAULT_QUAYS = ["NSR:Quay:10949"]
 DEFAULT_LINE = "RUT:Line:3"
 
+# Module wide logger
+LOG = logging.getLogger(__name__)
+LOG.setLevel(logging.DEBUG)
 
-def _situation_generator(line_ids):
-    """A generator that yields one situation at the time.
 
-    This function loops over the provided line IDs and gets all relevant
-    situation from Entur. It then yields one situation at the time.
+class AppData:
+    """A class to store app data and handle app logic"""
 
-    Args:
-        line_ids: An iterable with line_id strings
+    def __init__(self, args):
+        # Extract arguments from the request
+        self.stop_id = args.get('stop_id', type=str, default=DEFAULT_STOPID)
+        self.platforms = args.getlist('platforms', type=str)
+        self.line_ids = args.getlist('line_id', type=str)
+        self.max_departures = args.get('max_departures', type=int,
+                                       default=10)
+        self.situation_lines = None
+        self.situation_gen = None
+        LOG.debug("Created new AppData object, lines: {}".format(
+            self.line_ids))
 
-    Returns:
-        A generator
+    def get_departures(self):
+        # Get new departure data
+        departures = rutertider.get_departures(
+            stop_id=self.stop_id, platforms=self.platforms,
+            line_ids=self.line_ids, max_departures=self.max_departures)
+        LOG.debug("Got new departures: {}".format(departures[0]))
 
-    Example:
-        gen = _situation_generator([])
-        situation = next(gen)
-    """
-    while True:
-        situations = [sit.summary for line_id in line_ids for sit in
-                      rutertider.get_situations(line_id)]
-        if not situations:
-            yield ''
-        for sit in situations:
-            yield sit
+        # Possibly update situation generator
+        situation_lines = {departure.line_id for departure in departures}
+        self.update_situation_generator(situation_lines)
+
+        return departures
+
+    def _situation_generator(self):
+        """A generator that yields one situation at the time"""
+        while True:
+            situations = []
+            for line_id in self.line_ids:
+                for situation in rutertider.get_situations(line_id):
+                    string = "{}: {}".format(situation.line_name,
+                                             situation.summary)
+                    situations.append(string)
+
+            LOG.debug("Updating situations: %s", situations)
+
+            if not situations:
+                yield ''
+            for sit in situations:
+                yield sit
+
+    def update_situation_generator(self, situation_lines):
+        # Update the situation generator if the lines changed
+        if not self.situation_lines == situation_lines:
+            self.situation_lines = situation_lines
+            LOG.debug("New list of situation lines: {}".format(
+                self.situation_lines))
+            self.situation_gen = self._situation_generator()
+
+    def next_situation(self):
+        """Return the next relevant situation"""
+        if self.situation_gen is None:
+            # Generator hasn't been initialized yet
+            return ''
+        return next(self.situation_gen)
 
 
 def create_app():
     app = flask.Flask(__name__)
+    app_data = None
 
     @app.route('/')
-    def create_ruter_departures():
+    def departures_from_stop_id():
+        # Create a new AppData instance based in the query arguments
+        nonlocal app_data
+        app_data = AppData(flask.request.args)
+
+        # Forward the query arguments to the other endpoints
         request_query = flask.request.query_string.decode()
         return flask.render_template("rutertider.html",
                                      query=flask.Markup(request_query))
 
     @app.route('/departure_table')
     def departure_table():
-        # Extract arguments from the request
-        stop_id = flask.request.args.get('stop_id', type=str,
-                                         default=DEFAULT_STOPID)
-        platforms = flask.request.args.getlist('platforms', type=str)
-        line_ids = flask.request.args.getlist('line_ids', type=str)
-        max_departures = flask.request.args.get('max_departures', type=int,
-                                                default=10)
+        # If arguments haven't been parsed yet
+        nonlocal app_data
+        if app_data is None:
+            app_data = AppData(flask.request.args)
 
-        # Create a list of relevant departures
-        departures = rutertider.get_departures(stop_id=stop_id,
-                                               platforms=platforms,
-                                               line_ids=line_ids,
-                                               max_departures=max_departures)
+        # Get latest departures and render template
+        departures = app_data.get_departures()
         return flask.render_template("departure_table.html",
                                      departures=departures)
 
     @app.route('/deviations')
     def deviations():
-        situation_gen = _situation_generator(line_ids=[DEFAULT_LINE])
-        return next(situation_gen)
+        # If arguments haven't been parsed yet
+        nonlocal app_data
+        if app_data is None:
+            app_data = AppData(flask.request.args)
+
+        # Return next relevant situation
+        return app_data.next_situation()
 
     return app
