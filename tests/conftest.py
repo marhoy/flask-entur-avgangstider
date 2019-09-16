@@ -2,6 +2,7 @@ import json
 import logging
 import os.path
 from datetime import datetime
+import pickle
 
 import pytest
 
@@ -34,11 +35,18 @@ def fixed_datetime():
 
 
 @pytest.fixture
-def saved_situation():
+def saved_situations_json():
     with open(os.path.join(os.path.dirname(__file__), "data",
-                           "situation.json")) as file:
+                           "situations.json")) as file:
         json_data = json.load(file)
     return json_data
+
+
+@pytest.fixture
+def saved_situations_list():
+    with open(os.path.join(os.path.dirname(__file__), "data",
+                           "situations.pkl"), "rb") as file:
+        return pickle.load(file)
 
 
 @pytest.fixture

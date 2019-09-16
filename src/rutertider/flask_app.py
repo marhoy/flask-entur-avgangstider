@@ -10,7 +10,9 @@ DEFAULT_LINE = "RUT:Line:3"
 
 # Module wide logger
 LOG = logging.getLogger(__name__)
-LOG.setLevel(logging.DEBUG)
+
+
+# LOG.setLevel(logging.DEBUG)
 
 
 class AppData:
@@ -33,7 +35,7 @@ class AppData:
         departures = rutertider.get_departures(
             stop_id=self.stop_id, platforms=self.platforms,
             line_ids=self.line_ids, max_departures=self.max_departures)
-        LOG.debug("Got new departures: {}".format(departures[0]))
+        LOG.debug("Got new departures for %s", self.stop_id)
 
         # Possibly update situation generator
         situation_lines = {departure.line_id for departure in departures}
@@ -44,15 +46,15 @@ class AppData:
     def _situation_generator(self):
         """A generator that yields one situation at the time"""
         while True:
-            situations = []
-            for line_id in self.line_ids:
-                for situation in rutertider.get_situations(line_id):
-                    string = "{}: {}".format(situation.line_name,
-                                             situation.summary)
-                    situations.append(string)
-
-            LOG.debug("Updating situations: %s", situations)
-
+            if self.line_ids:
+                lines = self.line_ids
+            elif self.situation_lines:
+                lines = list(self.situation_lines)
+            else:
+                lines = []
+            situations = [str(situation) for situation in
+                          rutertider.get_situations(lines)]
+            LOG.debug("Got new situations for lines: %s", lines)
             if not situations:
                 yield ''
             for sit in situations:
@@ -62,15 +64,18 @@ class AppData:
         # Update the situation generator if the lines changed
         if not self.situation_lines == situation_lines:
             self.situation_lines = situation_lines
-            LOG.debug("New list of situation lines: {}".format(
+            LOG.debug("New set of situation lines: {}".format(
                 self.situation_lines))
-            self.situation_gen = self._situation_generator()
+            # self.situation_gen = self._situation_generator()
 
     def next_situation(self):
         """Return the next relevant situation"""
         if self.situation_gen is None:
             # Generator hasn't been initialized yet
-            return ''
+            if self.situation_lines is None:
+                # Departures haven't been pulled yet
+                self.get_departures()
+            self.situation_gen = self._situation_generator()
         return next(self.situation_gen)
 
 

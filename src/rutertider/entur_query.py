@@ -89,24 +89,24 @@ def create_departure_query_whitelist(stop_id, line_ids, max_departures=5):
     return departure_query
 
 
-def create_situation_query(line_id):
+def create_situation_query(line_ids):
     """Create a GraphQL query, finding all situations for a specific line_id
 
     Args:
-        line_id: The line_id you want situations for
+        line_ids: A list of line_ids you want situations for
 
     Returns:
         A GraphQL query
     """
     situation_query = """
     {
-      line(id: "LINE_ID") {
+      lines(ids: LIST_OF_LINE_IDS) {
         id
         publicCode
         transportMode
         presentation {
-          colour
           textColour
+          colour
         }
         situations {
           summary {
@@ -128,7 +128,7 @@ def create_situation_query(line_id):
         }
       }
     }
-    """.replace('LINE_ID', line_id)
+    """.replace('LIST_OF_LINE_IDS', str(line_ids).replace("'", '"'))
     return situation_query
 
 

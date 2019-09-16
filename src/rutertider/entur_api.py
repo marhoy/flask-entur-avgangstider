@@ -1,6 +1,7 @@
 import logging
 from dataclasses import dataclass
 from datetime import datetime
+import functools
 
 from rutertider import entur_query, utils
 
@@ -25,6 +26,7 @@ class Departure:
 
 
 @dataclass
+@functools.total_ordering
 class Situation:
     """A data class to hold situations for a line id"""
     line_id: str
@@ -33,6 +35,19 @@ class Situation:
     bg_color: str
     fg_color: str
     summary: str
+
+    # Define what it takes for two Situations to be equal
+    def __eq__(self, other):
+        return (self.line_name, self.summary) == \
+               (other.line_name, other.summary)
+
+    # Define what it takes for one Situations to be less than another
+    def __lt__(self, other):
+        return (self.line_name, self.summary) < \
+               (other.line_name, other.summary)
+
+    def __str__(self):
+        return "{}: {}".format(self.line_name, self.summary)
 
 
 def get_departures(stop_id, platforms=None, line_ids=None,
@@ -95,55 +110,61 @@ def get_departures(stop_id, platforms=None, line_ids=None,
     return departures
 
 
-def get_situations(line_id, language='no'):
+def get_situations(line_ids, language='no'):
     """Query the Entur API and return a list of relevant situations
 
     Args:
-        line_id: A string with a valid line id
+        line_ids: A list of strings with line_ids
         language: A language string: 'en' or 'no'
 
     Returns:
         A list of relevant situations for that line
     """
-    query = entur_query.create_situation_query(line_id)
+
+    LOG.debug("Getting situations for lines %s", line_ids)
+
+    query = entur_query.create_situation_query(line_ids)
     json = entur_query.journey_planner_api(query).json()
 
-    LOG.debug("JSON response: %s", json)
-
-    # Return an empty list if there is no data
-    if not json['data']['line']:
-        LOG.warning("No data for line %s", line_id)
-        return []
-
-    # Extract some general information about the line
-    line_name = json['data']['line']['publicCode']
-    transport_mode = json['data']['line']['transportMode']
-    fg_color = json['data']['line']['presentation']['textColour']
-    bg_color = json['data']['line']['presentation']['colour']
-
     situations = []
-    for situation in json['data']['line']['situations']:
+    if not json.get('data'):
+        # If there is no valid data, return an empty list
+        return situations
 
-        # Extract the fields we need from the response
-        start_time = situation['validityPeriod']['startTime']
-        end_time = situation['validityPeriod']['endTime']
+    for line in json['data']['lines']:
+        if not line:
+            # Might be empty if line_id is non-existing
+            continue
 
-        # Find start, end and current timestamp
-        start_time = utils.iso_str_to_datetime(start_time)
-        end_time = utils.iso_str_to_datetime(end_time)
-        now = datetime.now(tz=start_time.tzinfo)
+        # Extract some general information about the line
+        line_id = line['id']
+        line_name = line['publicCode']
+        transport_mode = line['transportMode']
+        fg_color = line['presentation']['textColour']
+        bg_color = line['presentation']['colour']
 
-        # Add relevant situations to the list
-        if start_time < now < end_time:
-            for summary in situation['summary']:
-                if summary['language'] == language:
-                    situations.append(Situation(
-                        line_id=line_id,
-                        line_name=line_name,
-                        transport_mode=transport_mode,
-                        fg_color=fg_color,
-                        bg_color=bg_color,
-                        summary=summary['value']
-                    ))
+        for situation in line['situations']:
+
+            # Extract the fields we need from the response
+            start_time = situation['validityPeriod']['startTime']
+            end_time = situation['validityPeriod']['endTime']
+
+            # Find start, end and current timestamp
+            start_time = utils.iso_str_to_datetime(start_time)
+            end_time = utils.iso_str_to_datetime(end_time)
+            now = datetime.now(tz=start_time.tzinfo)
+
+            # Add relevant situations to the list
+            if start_time < now < end_time:
+                for summary in situation['summary']:
+                    if summary['language'] == language:
+                        situations.append(Situation(
+                            line_id=line_id,
+                            line_name=line_name,
+                            transport_mode=transport_mode,
+                            fg_color=fg_color,
+                            bg_color=bg_color,
+                            summary=summary['value']
+                        ))
 
     return sorted(situations)
