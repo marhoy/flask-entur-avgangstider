@@ -19,10 +19,12 @@ class AppData:
     def __init__(self, args):
         # Extract arguments from the request
         self.stop_id = args.get('stop_id', type=str, default=DEFAULT_STOPID)
-        self.platforms = args.getlist('platforms', type=str)
+        self.platforms = args.getlist('platform', type=str)
         self.line_ids = args.getlist('line_id', type=str)
         self.max_departures = args.get('max_departures', type=int,
                                        default=10)
+        self.max_departure_lines = args.get('max_lines', type=int,
+                                            default=4)
         self.situation_lines = None
         self.situation_gen = None
         LOG.debug("Created new AppData object, lines: {}".format(
@@ -33,6 +35,7 @@ class AppData:
         departures = rutertider.get_departures(
             stop_id=self.stop_id, platforms=self.platforms,
             line_ids=self.line_ids, max_departures=self.max_departures)
+        departures = departures[:self.max_departure_lines]
         LOG.debug("Got new departures for %s", self.stop_id)
 
         # Possibly update situation generator
