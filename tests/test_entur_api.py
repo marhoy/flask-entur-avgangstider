@@ -7,28 +7,35 @@ def test_get_departures():
     """Test with station Godlia T-bane
     We know the only valid line is 3, and there is only two platforms"""
 
-    departures = rutertider.get_departures(stop_id="NSR:StopPlace:5968")
-    assert len(departures) == 5
-
     departures = rutertider.get_departures(stop_id="NSR:StopPlace:5968",
-                                           max_departures=3)
-    assert len(departures) == 3
+                                           max_departures=10)
+    assert len(departures) == 10
     for departure in departures:
         assert departure.line_name == '3'
         assert departure.platform in ('NSR:Quay:10948', 'NSR:Quay:10949')
 
     # Test querying a specific line (from Helsfyr)
     departures = rutertider.get_departures("NSR:StopPlace:59516",
-                                           max_departures=20,
+                                           max_departures=10,
                                            line_ids=['RUT:Line:21'])
-    assert departures
+    assert len(departures) == 10
+    for departure in departures:
+        assert departure.line_name == '21'
 
     # Test querying a specific platform (Godlia T, only towards Mortensrud)
     departures = rutertider.get_departures(stop_id="NSR:StopPlace:5968",
                                            platforms=['NSR:Quay:10948'])
     assert departures
+    for departure in departures:
+        assert departure.line_name == '3'
+        assert departure.platform == 'NSR:Quay:10948'
 
 
+# Mock departure data to check time strings
+
+
+
+@pytest.mark.skip
 def test_get_situations():
     # Test with an invalid line number
     situations = rutertider.get_situations(line_ids=["RUT:Line:0"])

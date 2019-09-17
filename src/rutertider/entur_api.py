@@ -11,7 +11,7 @@ LOG = logging.getLogger(__name__)
 
 @dataclass
 class Departure:
-    """A data class to hold departure info"""
+    """A data class to hold information about a departure"""
     line_id: str
     line_name: str
     destination: str
