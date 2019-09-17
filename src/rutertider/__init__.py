@@ -12,4 +12,4 @@ __all__ = ["get_departures", "get_situations", "create_app"]
 logging.basicConfig(format='[%(levelname)s] %(name)s(%(lineno)s): %(message)s',
                     level=logging.WARNING)
 LOG = logging.getLogger(__name__)
-LOG.setLevel(logging.DEBUG)
+# LOG.setLevel(logging.DEBUG)

@@ -1,8 +1,8 @@
 import json
 import logging
 import os.path
-from datetime import datetime
 import pickle
+from datetime import datetime
 
 import pytest
 

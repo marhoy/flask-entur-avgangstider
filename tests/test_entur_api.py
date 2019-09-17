@@ -1,12 +1,11 @@
 from unittest import mock
-import pytest
+
 import rutertider
 
 
 def test_get_departures():
-    """Test with station Godlia T-bane
-    We know the only valid line is 3, and there is only two platforms"""
-
+    # Test without specifying line_ids
+    # At Godlia T, the only passing line is 3, and there is only two quays
     departures = rutertider.get_departures(stop_id="NSR:StopPlace:5968",
                                            max_departures=10)
     assert len(departures) == 10
@@ -29,27 +28,26 @@ def test_get_departures():
     for departure in departures:
         assert departure.line_name == '3'
         assert departure.platform == 'NSR:Quay:10948'
+        assert "3 -> Mortensrud" in str(departure)
 
 
-# Mock departure data to check time strings
-
-
-
-@pytest.mark.skip
 def test_get_situations():
+    # Test without specifying line_ids
+    situations = rutertider.get_situations(line_ids=[])
+    assert situations == []
     # Test with an invalid line number
     situations = rutertider.get_situations(line_ids=["RUT:Line:0"])
-    assert len(situations) == 0
+    assert situations == []
 
 
-@pytest.mark.skip
 @mock.patch('rutertider.entur_api.entur_query')
-def test_get_situations_mocked(entur_query, saved_situation, fixed_datetime):
-    # Fake datetime.now() and the situations
-    entur_query.journey_planner_api().json.return_value = saved_situation
+def test_get_situations_mocked(entur_query, saved_situations_json,
+                               saved_situations_list, fixed_datetime):
+    # Fake datetime.now() and the situation-json
+    entur_query.journey_planner_api().json.return_value = saved_situations_json
     rutertider.entur_api.datetime = fixed_datetime('2019-09-13T20:00:00+02:00')
 
-    situations = rutertider.get_situations(["RUT:Line:120"])
-    assert len(situations) == 1
-    assert situations[0].summary == 'Buss for trikk Jernbanetorget-Grefsen ' \
-                                    'etter kl. 20:00'
+    # Compared returned situations with the saved result
+    situations = rutertider.get_situations(["RUT:Line:1", "RUT:Line:35"])
+    assert situations == saved_situations_list
+    assert str(situations[0]) == str(saved_situations_list[0])

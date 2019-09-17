@@ -1,7 +1,7 @@
+import functools
 import logging
 from dataclasses import dataclass
 from datetime import datetime
-import functools
 
 from rutertider import entur_query, utils
 

@@ -1,5 +1,3 @@
-from unittest import mock
-
 from rutertider.entur_query import (create_departure_query,
                                     create_departure_query_whitelist,
                                     create_situation_query,
@@ -36,12 +34,3 @@ def test_create_situation_query():
     response = journey_planner_api(query)
     assert response.ok is True
     assert response.json().get('data')
-
-# @mock.patch('rutertider.entur_api.entur_query')
-# def test_create_situation_query_mocked(mocked_query, saved_situations_json):
-#     """Mock the response from Entur and check that we return the same"""
-#     query = create_situation_query(line_ids=['RUT:Line:1', 'RUT:Line:35'])
-#     mocked_query.journey_planner_api().json.return_value = saved_situations_json
-#     response = journey_planner_api(query)
-#     assert response.ok is True
-#     assert response.json() == saved_situations_json

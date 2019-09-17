@@ -10,8 +10,6 @@ DEFAULT_LINE = "RUT:Line:3"
 
 # Module wide logger
 LOG = logging.getLogger(__name__)
-
-
 # LOG.setLevel(logging.DEBUG)
 
 
@@ -46,12 +44,11 @@ class AppData:
     def _situation_generator(self):
         """A generator that yields one situation at the time"""
         while True:
+            lines = []
             if self.line_ids:
                 lines = self.line_ids
             elif self.situation_lines:
                 lines = list(self.situation_lines)
-            else:
-                lines = []
             situations = [str(situation) for situation in
                           rutertider.get_situations(lines)]
             LOG.debug("Got new situations for lines: %s", lines)
