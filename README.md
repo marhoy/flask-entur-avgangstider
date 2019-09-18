@@ -1,4 +1,4 @@
-# Avgangstider for Ruter
+# Avgangstider for Entur
 
 En Flask-applikasjon som leser et [Ruter-API](https://reisapi.ruter.no/help) og lager en avgangstabell som til forveksling ligner Ruters egne skjermer. Ved hjelp av parameterne nedenfor kan man velge hvilken stasjon, platform og linje man vil vise avganger for.
 
