@@ -23,8 +23,8 @@ class AppData:
                                            default=6)
         self.situation_lines = None
         self.situation_gen = None
-        LOG.debug("Created new AppData object, lines: {}".format(
-            self.line_ids))
+        LOG.debug("Created new AppData object, stop_id: {}, lines: {}".format(
+            self.stop_id, self.line_ids))
 
     def get_departures(self):
         # Get new departure data
