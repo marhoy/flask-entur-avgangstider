@@ -15,6 +15,7 @@ class AppData:
 
     def __init__(self, args):
         # Extract arguments from the request
+        self.args = args
         self.stop_id = args.get('stop_id', type=str, default=None)
         self.platforms = args.getlist('platform', type=str)
         self.line_ids = args.getlist('line_id', type=str)
@@ -87,8 +88,8 @@ def create_app():
         if app_data is None:
             app_data = AppData(flask.request.args)
 
-        # If stop_id has changed, create new app_data instance
-        if not app_data.stop_id == stop_id:
+        # The arguments have changed, create new app_data instance
+        if not flask.request.args == app_data.args:
             app_data = AppData(flask.request.args)
 
     @app.route('/')
