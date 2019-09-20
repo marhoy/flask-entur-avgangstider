@@ -1,25 +1,36 @@
 FROM balenalib/%%BALENA_MACHINE_NAME%%-alpine-python:3.7-latest
 
-# RUN pip install venv
+# Install poetry in the system python
+RUN pip install --upgrade pip && pip install "poetry==0.12.17"
 
-# Run everything as a non-privileged user
+# Run everything from here as a non-privileged user
 ENV USERNAME flask
-RUN addgroup -S $USERNAME && adduser -S $USERNAME -G $USERNAME 
+RUN useradd -m $USERNAME
+# If using an alpine image
+# RUN addgroup -S $USERNAME && adduser -S $USERNAME -G $USERNAME
+
+# Set a workdir
+WORKDIR /home/$USERNAME/app
+RUN chown $USERNAME.$USERNAME .
+
+# Run as a non-privileged used
 USER $USERNAME
 
-# Set home directory as workdir
-WORKDIR /home/$USERNAME
+# Copy the lock file. If it hasn't changed, we won't reinstall packages
+COPY --chown=$USERNAME:$USERNAME poetry.lock pyproject.toml ./
+
+# Install required packages, and the optional gunicorn
+RUN poetry install --no-dev -E gunicorn
 
 # Copy necessary files to container
-COPY requirements.txt gunicorn_config.py ./
-COPY rutertider rutertider
+COPY --chown=$USERNAME:$USERNAME src ./src
 
-# Create a venv and install requirements
-RUN python -m venv venv
-RUN venv/bin/pip install -r requirements.txt
-RUN venv/bin/pip install gunicorn
-# RUN pip install -r requirements.txt
+# Install this package as well
+RUN poetry install --no-dev
 
+# Expose port 5000
+EXPOSE 5000
 
-
-CMD ["./venv/bin/gunicorn", "-c", "gunicorn_config.py", "rutertider:app"]
+# Run gunicorn
+ENTRYPOINT ["poetry", "run"]
+CMD ["gunicorn", "-c", "src/gunicorn_config.py", "rutertider.flask_app:app"]

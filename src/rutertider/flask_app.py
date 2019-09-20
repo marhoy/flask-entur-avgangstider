@@ -4,10 +4,6 @@ import flask
 
 import rutertider
 
-DEFAULT_STOPID = "NSR:StopPlace:5968"
-DEFAULT_QUAYS = ["NSR:Quay:10949"]
-DEFAULT_LINE = "RUT:Line:3"
-
 # Module wide logger
 LOG = logging.getLogger(__name__)
 # LOG.setLevel(logging.DEBUG)
@@ -18,13 +14,13 @@ class AppData:
 
     def __init__(self, args):
         # Extract arguments from the request
-        self.stop_id = args.get('stop_id', type=str, default=DEFAULT_STOPID)
+        self.stop_id = args.get('stop_id', type=str, default=None)
         self.platforms = args.getlist('platform', type=str)
         self.line_ids = args.getlist('line_id', type=str)
         self.max_departures = args.get('max_departures', type=int,
                                        default=10)
-        self.max_departure_lines = args.get('max_lines', type=int,
-                                            default=4)
+        self.max_departure_rows = args.get('max_rows', type=int,
+                                           default=6)
         self.situation_lines = None
         self.situation_gen = None
         LOG.debug("Created new AppData object, lines: {}".format(
@@ -35,7 +31,7 @@ class AppData:
         departures = rutertider.get_departures(
             stop_id=self.stop_id, platforms=self.platforms,
             line_ids=self.line_ids, max_departures=self.max_departures)
-        departures = departures[:self.max_departure_lines]
+        departures = departures[:self.max_departure_rows]
         LOG.debug("Got new departures for %s", self.stop_id)
 
         # Possibly update situation generator
@@ -89,6 +85,10 @@ def create_app():
         nonlocal app_data
         app_data = AppData(flask.request.args)
 
+        # If stop_id was not provided, show help page
+        if app_data.stop_id is None:
+            return flask.render_template("help.html")
+
         # Forward the query arguments to the other endpoints
         request_query = flask.request.query_string.decode()
         return flask.render_template("rutertider.html",
@@ -120,3 +120,7 @@ def create_app():
 
 
 app = create_app()
+
+if __name__ == '__main__':
+    app = create_app()
+    app.run(host='0.0.0.0', port=5000, debug=True)
