@@ -33,4 +33,4 @@ EXPOSE 5000
 
 # Run gunicorn
 ENTRYPOINT ["poetry", "run"]
-CMD ["gunicorn", "-c", "src/gunicorn_config.py", "rutertider.flask_app:app"]
+CMD ["gunicorn", "-c", "src/gunicorn_config.py", "rutertider.flask_app:create_app()"]
