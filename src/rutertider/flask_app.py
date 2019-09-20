@@ -1,4 +1,5 @@
 import logging
+import time
 
 import flask
 
@@ -34,9 +35,12 @@ class AppData:
         departures = departures[:self.max_departure_rows]
         LOG.debug("Got new departures for %s", self.stop_id)
 
-        # Possibly update situation generator
+        # Possibly update situation lines
         situation_lines = {departure.line_id for departure in departures}
-        self.update_situation_generator(situation_lines)
+        if not self.situation_lines == situation_lines:
+            self.situation_lines = situation_lines
+            LOG.debug("New set of situation lines: {}".format(
+                self.situation_lines))
 
         return departures
 
@@ -56,21 +60,10 @@ class AppData:
             for sit in situations:
                 yield sit
 
-    def update_situation_generator(self, situation_lines):
-        # Update the situation generator if the lines changed
-        if not self.situation_lines == situation_lines:
-            self.situation_lines = situation_lines
-            LOG.debug("New set of situation lines: {}".format(
-                self.situation_lines))
-            # self.situation_gen = self._situation_generator()
-
     def next_situation(self):
         """Return the next relevant situation"""
         if self.situation_gen is None:
             # Generator hasn't been initialized yet
-            if self.situation_lines is None:
-                # Departures haven't been pulled yet
-                self.get_departures()
             self.situation_gen = self._situation_generator()
         return next(self.situation_gen)
 
@@ -79,16 +72,27 @@ def create_app():
     app = flask.Flask(__name__)
     app_data = None
 
-    @app.route('/')
-    def departures_from_stop_id():
-        # Create a new AppData instance based in the query arguments
-        nonlocal app_data
-        app_data = AppData(flask.request.args)
+    @app.before_request
+    def create_or_update_app_data():
+        """This function runs before every request"""
+        # Get stop_id from request args
+        stop_id = flask.request.args.get('stop_id', type=str, default=None)
 
         # If stop_id was not provided, show help page
-        if app_data.stop_id is None:
+        if stop_id is None:
             return flask.render_template("help.html")
 
+        # Create global app_data instance if needed
+        nonlocal app_data
+        if app_data is None:
+            app_data = AppData(flask.request.args)
+
+        # If stop_id has changed, create new app_data instance
+        if not app_data.stop_id == stop_id:
+            app_data = AppData(flask.request.args)
+
+    @app.route('/')
+    def departures_from_stop_id():
         # Forward the query arguments to the other endpoints
         request_query = flask.request.query_string.decode()
         return flask.render_template("rutertider.html",
@@ -96,11 +100,6 @@ def create_app():
 
     @app.route('/departure_table')
     def departure_table():
-        # If arguments haven't been parsed yet
-        nonlocal app_data
-        if app_data is None:
-            app_data = AppData(flask.request.args)
-
         # Get latest departures and render template
         departures = app_data.get_departures()
         return flask.render_template("departure_table.html",
@@ -108,10 +107,9 @@ def create_app():
 
     @app.route('/deviations')
     def deviations():
-        # If arguments haven't been parsed yet
-        nonlocal app_data
-        if app_data is None:
-            app_data = AppData(flask.request.args)
+        # Wait a second so the other thread have time to
+        # set the situation lines
+        time.sleep(1)
 
         # Return next relevant situation
         return app_data.next_situation()
@@ -120,7 +118,7 @@ def create_app():
 
 
 if __name__ == '__main__':
-    # Start a debugging server
-    app = create_app()
+    # Start a Flask debugging server
+    flask_app = create_app()
     LOG.setLevel(logging.DEBUG)
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    flask_app.run(host='0.0.0.0', port=5000, debug=True)

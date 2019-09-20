@@ -14,6 +14,13 @@ def test_app(client):
     assert response.status_code == 200
     assert b'DepartureTable' in response.data
 
+    # Call again, but with a new stop_id
+    response = client.get('/', query_string={
+        'stop_id': 'NSR:StopPlace:59872'
+    })
+    assert response.status_code == 200
+    assert b'DepartureTable' in response.data
+
 
 def test_departure_table(client):
     response = client.get('/departure_table', query_string={
@@ -23,6 +30,19 @@ def test_departure_table(client):
 
 
 def test_deviations(client):
+    # Try first without having got any departures
+    # There should be no situations
+    response = client.get('/deviations', query_string={
+        'stop_id': 'NSR:StopPlace:58366'
+    })
+    assert response.status_code == 200
+    assert response.data == b''
+
+    # First, get some departures
+    client.get('/departure_table', query_string={
+        'stop_id': 'NSR:StopPlace:58366'
+    })
+    # Then get situations again
     response = client.get('/deviations', query_string={
         'stop_id': 'NSR:StopPlace:58366'
     })
@@ -45,3 +65,4 @@ def test_deviations_mocked(mocked_func, client, saved_situations_list):
         'stop_id': 'NSR:StopPlace:58366'
     })
     assert response.status_code == 200
+    assert b'1: Buss for bane Majorstuen' in response.data
