@@ -117,3 +117,6 @@ def create_app():
         return app_data.next_situation()
 
     return app
+
+
+app = create_app()
