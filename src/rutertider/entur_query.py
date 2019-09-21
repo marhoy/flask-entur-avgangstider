@@ -3,7 +3,6 @@ from typing import List
 
 import requests
 
-
 # For testing and debugging of queries, use this page:
 # https://api.entur.org/doc/shamash-journeyplanner/
 
