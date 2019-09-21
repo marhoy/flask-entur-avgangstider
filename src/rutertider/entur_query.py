@@ -1,20 +1,24 @@
 import random
+from typing import List
 
 import requests
 
-# For testing of queries, use this page:
+
+# For testing and debugging of queries, use this page:
 # https://api.entur.org/doc/shamash-journeyplanner/
 
 
-def create_departure_query(stop_id, max_departures=10):
-    """Create a GraphQL query, finding all departures for a specific stop_id
+def create_departure_query(stop_id: str,
+                           max_departures: int = 10
+                           ) -> str:
+    """Create a GraphQL query, finding departures for a specific stop_id
 
     Args:
         stop_id: The stop_id you want departures for
-        max_departures: The maximum number of departures to return
+        max_departures: The maximum number of departures to ask for
 
     Returns:
-        A GraphQL query
+        A GraphQL query string
     """
     departure_query = """
     {
@@ -50,7 +54,21 @@ def create_departure_query(stop_id, max_departures=10):
     return departure_query
 
 
-def create_departure_query_whitelist(stop_id, line_ids, max_departures=5):
+def create_departure_query_whitelist(stop_id: str,
+                                     line_ids: List[str],
+                                     max_departures: int = 10
+                                     ) -> str:
+    """Create a GraphQL query, finding departures for a specific stop_id
+    and for specific line_ids.
+
+    Args:
+        stop_id: The stop_id you want departures for
+        line_ids: A list of the lines you want departures for
+        max_departures: The maximum number of departures to ask for
+
+    Returns:
+        A GraphQL query string
+    """
     departure_query = """
     {
       stopPlace(id: "STOP_PLACE") {
@@ -89,14 +107,15 @@ def create_departure_query_whitelist(stop_id, line_ids, max_departures=5):
     return departure_query
 
 
-def create_situation_query(line_ids):
-    """Create a GraphQL query, finding all situations for a specific line_id
+def create_situation_query(line_ids: List[str]
+                           ) -> str:
+    """Create a GraphQL query, finding situations for a list of line_ids
 
     Args:
         line_ids: A list of line_ids you want situations for
 
     Returns:
-        A GraphQL query
+        A GraphQL query string
     """
     situation_query = """
     {
@@ -132,7 +151,8 @@ def create_situation_query(line_ids):
     return situation_query
 
 
-def journey_planner_api(query):
+def journey_planner_api(query: str
+                        ) -> requests.Response:
     """Query the Entur Journey Planner API
 
     Args:
@@ -141,7 +161,7 @@ def journey_planner_api(query):
     Returns:
         A requests response object
     """
-    query_url = 'https://api.entur.io/journey-planner/v2/graphql'
+    query_url = r'https://api.entur.io/journey-planner/v2/graphql'
     headers = {'ET-Client-Name': 'flask - avgangstider_{:03}'.format(
         random.randint(0, 999))}
     response = requests.post(query_url, headers=headers, json={'query': query})

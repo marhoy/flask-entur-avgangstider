@@ -2,6 +2,7 @@ import logging
 import time
 
 import flask
+from werkzeug.datastructures import ImmutableMultiDict
 
 import rutertider
 
@@ -13,7 +14,9 @@ LOG = logging.getLogger(__name__)
 class AppData:
     """A class to store app data and handle app logic"""
 
-    def __init__(self, args):
+    def __init__(self,
+                 args: ImmutableMultiDict
+                 ) -> None:
         # Extract arguments from the request
         self.args = args
         self.stop_id = args.get('stop_id', type=str, default=None)
@@ -22,7 +25,7 @@ class AppData:
         self.max_departures = args.get('max_departures', type=int,
                                        default=10)
         self.max_departure_rows = args.get('max_rows', type=int,
-                                           default=6)
+                                           default=10)
         self.situation_lines = None
         self.situation_gen = None
         LOG.debug("Created new AppData object, stop_id: {}, lines: {}".format(
@@ -76,6 +79,11 @@ def create_app():
     @app.before_request
     def create_or_update_app_data():
         """This function runs before every request"""
+        LOG.debug("In before_request: {}".format(flask.request.path))
+
+        if flask.request.path.startswith("/static"):
+            return
+
         # Get stop_id from request args
         stop_id = flask.request.args.get('stop_id', type=str, default=None)
 
@@ -102,6 +110,7 @@ def create_app():
     @app.route('/departure_table')
     def departure_table():
         # Get latest departures and render template
+        LOG.debug("In departure_table: {}".format(flask.request.args))
         departures = app_data.get_departures()
         return flask.render_template("departure_table.html",
                                      departures=departures)

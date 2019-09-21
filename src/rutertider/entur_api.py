@@ -2,11 +2,17 @@ import functools
 import logging
 from dataclasses import dataclass
 from datetime import datetime
+from typing import List
+
+from typing_extensions import Literal
 
 from rutertider import entur_query, utils
 
 # Module wide logger
 LOG = logging.getLogger(__name__)
+
+# Type specification for language: Either "no" or "en"
+Language = Literal["no", "en"]
 
 
 @dataclass
@@ -50,27 +56,22 @@ class Situation:
         return "{}: {}".format(self.line_name, self.summary)
 
 
-def get_departures(stop_id, platforms=None, line_ids=None,
-                   max_departures=None):
-    """Query the API and return a list of matching departures
+def get_departures(stop_id: str,
+                   line_ids: List[str] = None,
+                   platforms: List[str] = None,
+                   max_departures: int = 10
+                   ) -> List[Departure]:
+    """Query the Entur API and return a list of matching departures
 
     Args:
-        stop_id:
-        platforms:
-        line_ids:
-        max_departures (int):
+        stop_id: The stop_id you want departures for
+        line_ids: An optional list with line_ids
+        platforms: An optional list with platform_ids
+        max_departures: The maximum number of departures to query for
 
     Returns:
         A list of departures
     """
-    # Handle optional arguments
-    if platforms is None:
-        platforms = []
-    if line_ids is None:
-        line_ids = []
-    if max_departures is None:
-        max_departures = 5
-
     # Get response from Entur API
     if line_ids:
         query = entur_query.create_departure_query_whitelist(
@@ -110,7 +111,9 @@ def get_departures(stop_id, platforms=None, line_ids=None,
     return departures
 
 
-def get_situations(line_ids, language='no'):
+def get_situations(line_ids: List[str],
+                   language: Language = "no"
+                   ) -> List[Situation]:
     """Query the Entur API and return a list of relevant situations
 
     Args:
@@ -126,7 +129,7 @@ def get_situations(line_ids, language='no'):
     query = entur_query.create_situation_query(line_ids)
     json = entur_query.journey_planner_api(query).json()
 
-    situations = []
+    situations: List[Situation] = []
     if not json.get('data'):
         # If there is no valid data, return an empty list
         return situations
