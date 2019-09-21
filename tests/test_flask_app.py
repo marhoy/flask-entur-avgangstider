@@ -1,6 +1,12 @@
 from unittest import mock
 
 
+def test_static(client):
+    response = client.get('/static/css/dinfont.css')
+    assert response.status_code == 200
+    assert b'font-face' in response.data
+
+
 def test_app_without_stop_id(client):
     response = client.get('/')
     assert response.status_code == 200
