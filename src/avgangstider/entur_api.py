@@ -4,15 +4,10 @@ from dataclasses import dataclass
 from datetime import datetime
 from typing import List
 
-from typing_extensions import Literal
-
-from rutertider import entur_query, utils
+from avgangstider import entur_query, utils
 
 # Module wide logger
 LOG = logging.getLogger(__name__)
-
-# Type specification for language: Either "no" or "en"
-Language = Literal["no", "en"]
 
 
 @dataclass
@@ -72,6 +67,9 @@ def get_departures(stop_id: str,
     Returns:
         A list of departures
     """
+    if not stop_id:
+        return []
+
     # Get response from Entur API
     if line_ids:
         query = entur_query.create_departure_query_whitelist(
@@ -112,7 +110,7 @@ def get_departures(stop_id: str,
 
 
 def get_situations(line_ids: List[str],
-                   language: Language = "no"
+                   language: str = "no"
                    ) -> List[Situation]:
     """Query the Entur API and return a list of relevant situations
 
@@ -125,6 +123,10 @@ def get_situations(line_ids: List[str],
     """
 
     LOG.debug("Getting situations for lines %s", line_ids)
+
+    # If line_ids is empty or None, return an empty list
+    # if not line_ids:
+    #     return []
 
     query = entur_query.create_situation_query(line_ids)
     json = entur_query.journey_planner_api(query).json()

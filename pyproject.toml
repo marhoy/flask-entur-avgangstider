@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "rutertider"
+name = "avgangstider"
 version = "0.1.0"
 description = "Avgangstider fra EnTur"
 authors = ["Martin Høy <marhoy@gmail.com>"]
@@ -9,7 +9,6 @@ python = "^3.7"
 flask = "^1.1"
 requests = "^2.22"
 gunicorn = {version = "^19.9", optional = true}
-typing-extensions = "^3.7"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.1"

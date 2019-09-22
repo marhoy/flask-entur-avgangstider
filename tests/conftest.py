@@ -6,7 +6,7 @@ from datetime import datetime
 
 import pytest
 
-import rutertider
+import avgangstider
 
 LOG = logging.getLogger(__name__)
 
@@ -51,5 +51,5 @@ def saved_situations_list():
 
 @pytest.fixture
 def app():
-    app = rutertider.create_app()
+    app = avgangstider.create_app()
     return app

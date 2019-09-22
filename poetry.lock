@@ -497,7 +497,7 @@ python-versions = "*"
 version = "1.4.0"
 
 [[package]]
-category = "main"
+category = "dev"
 description = "Type Hints for Python"
 name = "typing"
 optional = false
@@ -505,7 +505,7 @@ python-versions = "*"
 version = "3.7.4.1"
 
 [[package]]
-category = "main"
+category = "dev"
 description = "Backported and Experimental Type Hints for Python 3.5+"
 name = "typing-extensions"
 optional = false
@@ -563,7 +563,7 @@ more-itertools = "*"
 gunicorn = ["gunicorn"]
 
 [metadata]
-content-hash = "7191dc0d6d9122c389898ca56e68babddb822ed4f1fad28af0694dc8a48a321b"
+content-hash = "aba695e502b5260b63a91ef4b9583a8d553dcbb7c42d823cc5c73e116482ea94"
 python-versions = "^3.7"
 
 [metadata.hashes]

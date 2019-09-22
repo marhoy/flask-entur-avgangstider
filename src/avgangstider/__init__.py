@@ -1,7 +1,7 @@
 import logging
 
-from rutertider.entur_api import get_departures, get_situations
-from rutertider.flask_app import create_app
+from avgangstider.entur_api import get_departures, get_situations
+from avgangstider.flask_app import create_app
 
 __version__ = "0.1.0"
 

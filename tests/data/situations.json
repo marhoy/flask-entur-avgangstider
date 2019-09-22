@@ -2,48 +2,131 @@
   "data": {
     "lines": [
       {
-        "id": "RUT:Line:1",
-        "publicCode": "1",
-        "transportMode": "metro",
+        "id": "RUT:Line:11",
+        "publicCode": "11",
+        "transportMode": "tram",
         "presentation": {
           "textColour": "FFFFFF",
-          "colour": "EC700C"
+          "colour": "0B91EF"
         },
         "situations": [
           {
             "summary": [
               {
-                "value": "Buss for bane Majorstuen-Frognerseteren etter kl. 19:00",
+                "value": "Stopper ikke p\u00e5 Storo, Grefsenveien, Sandaker senter, Torshov, Biermanns gate, Birkelunden og Schous plass",
                 "language": "no"
               },
               {
-                "value": "Buses for the metro Majorstuen-Frognerseteren in the evenings",
+                "value": "Not stopping at Storo, Grefsenveien, Sandaker senter, Torshov, Biermanns gate, Birkelunden and Schous plass",
                 "language": "en"
               }
             ],
             "description": [
               {
-                "value": "I forbindelse med planlagte arbeider p\u00e5 Holmenkollbanen kj\u00f8res det buss for T-bane etter ca. kl. 19:00 mandag, tirsdag og onsdag i ukene 36, 37 og 38. ",
+                "value": "Trikken har en omkj\u00f8ring og stopper ikke p\u00e5 Storo, Grefsenveien, Sandaker senter, Torshov, Biermanns gate, Birkelunden og Schous plass p\u00e5 grunn av anleggsarbeid.",
                 "language": "no"
               },
               {
-                "value": "In connection with planned works on the Holmenkoll metro line, buses for the metro will run after about 19:00 hours (7 p.m.) on Mondays, Tuesdays and Wednesdays. ",
+                "value": "The trams have a detour and do not stop at Storo, Grefsenveien, Sandaker senter, Torshov, Biermanns gate, Birkelunden and Schous plass due to construction work.",
                 "language": "en"
               }
             ],
             "advice": [
               {
-                "value": "Mellom Midtstuen og Lillevann kj\u00f8res det minibuss (1C). Bytte mellom buss 1B og 1C p\u00e5 Besserud. Buss for bane 1B kj\u00f8rer fra plattform G p\u00e5 Majorstuen.",
+                "value": "Trikken vil f\u00e5 endret tras\u00e9 og kj\u00f8re via Carl berners plss og Tondheimsveien.\nBuss 11B buss-for-trikk fra Jernbanetorget plattform D til Kjels\u00e5s",
                 "language": "no"
               },
               {
-                "value": "Buses 1B and 1C will connect at Besserud. Bus for metro (1B) run from platform G in Valkyriegata at Majorstuen.",
+                "value": "The deviation route is via Carl Berners plass and Trondheimsveien.\nBus 11 B replaces the tram from Jernbanetorget platform D to Kjels\u00e5s",
                 "language": "en"
               }
             ],
             "validityPeriod": {
-              "startTime": "2019-09-02T20:00:00+0200",
-              "endTime": "2019-09-19T02:00:00+0200"
+              "startTime": "2019-09-23T20:00:00+0200",
+              "endTime": "2019-09-24T03:00:00+0200"
+            }
+          },
+          {
+            "summary": [
+              {
+                "value": "Innstilt mellom Jernbanetorget og Majorstuen",
+                "language": "no"
+              },
+              {
+                "value": "Suspended between Jernbanetorget and Majorstuen",
+                "language": "en"
+              }
+            ],
+            "description": [
+              {
+                "value": "Trikk 11 er innstilt mellom Jernbanetorget og Majorstuen p\u00e5 grunn av Oslo maraton.",
+                "language": "no"
+              },
+              {
+                "value": "Tram 11 is suspended from Jernbanetorget to Majorstuen due to Oslo maraton.",
+                "language": "en"
+              }
+            ],
+            "advice": [
+              {
+                "value": "Stopper ikke p\u00e5 Stortorvet, Tinghuset, Holbergs plass, Frydenlund, Welhavens gate, Homansbyen, Bogstadveien, Majorstuen. P\u00e5 Jernbanetorget stopper linje 11 ved plf. B og C.",
+                "language": "no"
+              },
+              {
+                "value": "Not stopping at Stortorvet, Tinghuset, Holbergs plass, Frydenlund, Welhavens gate, Homansbyen, Bogstadveien, Majorstuen. At Jernbanetorget, line 11 stops at plf. B and C.",
+                "language": "en"
+              }
+            ],
+            "validityPeriod": {
+              "startTime": "2019-09-21T05:00:00+0200",
+              "endTime": "2019-09-21T21:00:00+0200"
+            }
+          }
+        ]
+      },
+      {
+        "id": "RUT:Line:17",
+        "publicCode": "17",
+        "transportMode": "tram",
+        "presentation": {
+          "textColour": "FFFFFF",
+          "colour": "0B91EF"
+        },
+        "situations": [
+          {
+            "summary": [
+              {
+                "value": "Innstilt mellom Jernbanetorget og Holbergs plass",
+                "language": "no"
+              },
+              {
+                "value": "Cancelled between Jernbanetorget and Holbergs plass",
+                "language": "en"
+              }
+            ],
+            "description": [
+              {
+                "value": "Tikk 17 kj\u00f8rer kun mellom Rikshospitalet \u2013 Holbergs plass og Jernbanetorget (Bj\u00f8rvika) \u2013 Grefsen st. p\u00e5 grunn av Oslo maraton. P\u00e5 Jernbanetorget stopper linje 17 ved plf. B/C. P\u00e5 Holbergs plass benyttes midlertidig holdeplass i Holbergs gate ved Pilestredet.",
+                "language": "no"
+              },
+              {
+                "value": "Tram 17 only runs between Rikshospitalet \u2013 Holbergs plass and Jernbanetorget (Bj\u00f8rvika) \u2013 Grefsen st. due to Oslo Marathon. At Jernbanetorget route 17 stops at the platform. B/C. At Holbergs plass, a temporary bus stop is set up in Holbergs gate by Pilestredet.",
+                "language": "en"
+              }
+            ],
+            "advice": [
+              {
+                "value": "Stopper ikke p\u00e5 Tinghuset og Stortorvet.",
+                "language": "no"
+              },
+              {
+                "value": "Does not stop at Tinghuset and Stortorvet.",
+                "language": "en"
+              }
+            ],
+            "validityPeriod": {
+              "startTime": "2019-09-21T05:00:00+0200",
+              "endTime": "2019-09-21T21:00:00+0200"
             }
           }
         ]
