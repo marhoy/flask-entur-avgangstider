@@ -14,7 +14,7 @@ Screenshots
 
 This is what you would see in your browser for Oslo S:
 
-.. image:: _static/Oslo_S.png
+.. image:: ../docs/_static/Oslo_S.png
     :scale: 50%
 
 ...or for Jernbanetorget:
