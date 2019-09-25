@@ -1,14 +1,3 @@
-About
-=====
-
-Avgangstider gir deg avgangstider og potensielle forsinkelser for all
-kollektivtrafikk som `Entur <https://en-tur.no/>`_ har oversikt over.
-Pakka består av to deler:
-
-*  Et Python-API for å hente avgangstider og forsinkelser fra Entur.
-*  En Flask app som viser de neste avgangene fra et stoppested.
-
-
 Screenshots
 ===========
 
@@ -21,6 +10,7 @@ This is what you would see in your browser for Oslo S:
 
 .. image:: _static/Jernbanetorget.png
     :scale: 50%
+
 
 
 Run from Docker container
