@@ -14,7 +14,7 @@ Welcome to Avgangstider's documentation!
    flask_app
    developing
 
-.. include:: ../README.rst
+.. include:: readme.rst
 
 
 Indices and tables
