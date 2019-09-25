@@ -8,5 +8,8 @@ Pakka består av to deler:
 *  Et Python-API for å hente avgangstider og forsinkelser fra Entur.
 *  En Flask app som viser de neste avgangene fra et stoppested.
 
+Dokumentasjon
+=======================================================
 
-Se
+`Dokumentasjon <https://avgangstider.readthedocs.io>`_ finnes på rtd.io.
+
