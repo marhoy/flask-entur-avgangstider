@@ -14,12 +14,12 @@ Screenshots
 
 This is what you would see in your browser for Oslo S:
 
-.. image:: ../docs/_static/Oslo_S.png
+.. image:: docs/_static/Oslo_S.png
     :scale: 50%
 
 ...or for Jernbanetorget:
 
-.. image:: _static/Jernbanetorget.png
+.. image:: docs/_static/Jernbanetorget.png
     :scale: 50%
 
 
