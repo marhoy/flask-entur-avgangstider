@@ -7,6 +7,8 @@
 Welcome to Avgangstider's documentation!
 ########################################
 
+Table of contents
+=================
 .. toctree::
    :maxdepth: 2
 
