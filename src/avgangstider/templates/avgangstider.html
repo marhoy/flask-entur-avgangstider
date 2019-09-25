@@ -19,7 +19,7 @@
             repeater();
             deviationRepeater();
             setInterval("repeater()", 30000);
-            setInterval("deviationRepeater()", 40000);
+            setInterval("deviationRepeater()", 15000);
         });
         function repeater() {
             $("#DepartureTable").load('/departure_table?{{ query }}');

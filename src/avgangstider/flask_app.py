@@ -101,7 +101,7 @@ def create_app():
         stored_query = flask.session.get('query', None)
         if query != stored_query:
             flask.session['query'] = query
-            flask.session['displayed_line_ids'] = None
+            flask.session['displayed_line_ids'] = []
 
         # Otherwise, forward the query arguments to the other endpoints
         return flask.render_template("avgangstider.html", query=query)
@@ -118,16 +118,20 @@ def create_app():
 
         # What line_ids are we displaying?
         if app_data.line_ids:
-            displayed_line_ids = list(set(app_data.line_ids))
+            displayed_line_ids = set(app_data.line_ids)
         elif departures:
-            displayed_line_ids = list({
+            displayed_line_ids = {
                 departure.line_id for departure in departures
-            })
+            }
         else:
-            displayed_line_ids = []
+            displayed_line_ids = set()
 
         # Store displayed line_ids in a client-side cookie
-        flask.session['displayed_line_ids'] = sorted(displayed_line_ids)
+        current_displayed_ids = flask.session.get('displayed_line_ids', [])
+
+        flask.session['displayed_line_ids'] = sorted(list(
+            displayed_line_ids.union(current_displayed_ids)
+        ))
         LOG.debug("Stored displayed lines: {}".format(
             flask.session['displayed_line_ids']))
 
