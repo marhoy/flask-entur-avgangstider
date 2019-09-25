@@ -67,8 +67,7 @@ def get_departures(stop_id: str,
     Returns:
         A list of departures
     """
-    if not stop_id:
-        return []
+    assert isinstance(stop_id, str)
 
     # Get response from Entur API
     if line_ids:
@@ -77,10 +76,14 @@ def get_departures(stop_id: str,
     else:
         query = entur_query.create_departure_query(
             stop_id=stop_id, max_departures=max_departures)
-    response = entur_query.journey_planner_api(query)
+    json = entur_query.journey_planner_api(query).json()
 
-    departures = []
-    for journey in response.json()['data']['stopPlace']['estimatedCalls']:
+    departures: List[Departure] = []
+    if json['data']['stopPlace'] is None:
+        # If there is no valid data, return an empty list
+        return departures
+
+    for journey in json['data']['stopPlace']['estimatedCalls']:
 
         # Extract the elements we want from the response
         line_id = journey['serviceJourney']['line']['id']

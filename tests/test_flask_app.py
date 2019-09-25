@@ -29,8 +29,22 @@ def test_app(client):
 
 
 def test_departure_table(client):
+    # Get departures with an empty stop_id
+    response = client.get('/departure_table', query_string={
+        'stop_id': None
+    })
+    assert response.status_code == 200
+
+    # Get departures with a valid stop_id
     response = client.get('/departure_table', query_string={
         'stop_id': 'NSR:StopPlace:58366'
+    })
+    assert response.status_code == 200
+
+    # Get departures with a valid stop_id and a line_id
+    response = client.get('/departure_table', query_string={
+        'stop_id': 'NSR:StopPlace:58366',
+        'line_id': 'RUT:Line:3'
     })
     assert response.status_code == 200
 
