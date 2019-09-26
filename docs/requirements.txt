@@ -1,6 +1,7 @@
-# This file is required since we use ReadTheDocs services.
-# If it is not used, feel free to delete it.
+# This file is since ReadTheDocs doesn't fully support Poetry.
+# We need to specify Sphinx version and also install our own package
+# such that autodoc will work.
 
 sphinx==2.2.0
 sphinx_autodoc_typehints==1.8.0
-../.
+../
