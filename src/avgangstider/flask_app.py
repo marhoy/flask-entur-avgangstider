@@ -2,10 +2,11 @@ import logging
 from dataclasses import dataclass
 from typing import List, Optional
 
-import avgangstider
 import flask
-from avgangstider.entur_api import Departure
 from werkzeug.datastructures import ImmutableMultiDict
+
+import avgangstider
+from avgangstider.entur_api import Departure
 
 # Module wide logger
 LOG = logging.getLogger(__name__)
