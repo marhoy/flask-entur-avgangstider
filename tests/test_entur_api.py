@@ -32,7 +32,7 @@ def test_get_departures():
     for departure in departures:
         assert departure.line_name == '3'
         assert departure.platform == 'NSR:Quay:10948'
-        assert "3 -> Mortensrud" in str(departure)
+        assert "3  -> Mortensrud" in str(departure)
 
 
 def test_get_situations():
