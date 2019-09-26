@@ -22,7 +22,7 @@ class Departure:
 @dataclass
 @functools.total_ordering
 class Situation:
-    """A data class to hold situations for a line id"""
+    """A data class to hold information about a situation"""
     line_id: str
     line_name: str
     transport_mode: str
@@ -35,7 +35,7 @@ class Situation:
         return (self.line_name, self.summary) == \
                (other.line_name, other.summary)
 
-    # Define what it takes for one Situations to be less than another
+    # Define what it takes for one Situation to be less than another
     def __lt__(self, other):
         return (self.line_name, self.summary) < \
                (other.line_name, other.summary)
