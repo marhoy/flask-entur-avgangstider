@@ -14,7 +14,7 @@ Setting up your development environment
  ::
 
     pyenv install 3.7.4
-    pyenv virtualenv avgangstider 3.7.4
+    pyenv virtualenv 3.7.4 avgangstider
     git clone git@github.com:marhoy/flask-entur-avgangstider.git
     cd flask-entur-avgangstider
     pyenv local avgangstider 3.7.4
