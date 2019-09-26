@@ -4,9 +4,8 @@ import os.path
 import pickle
 from datetime import datetime
 
-import pytest
-
 import avgangstider
+import pytest
 
 LOG = logging.getLogger(__name__)
 
