@@ -13,7 +13,6 @@ Avgangstider, all you have to do is::
    pip install avgangstider
 
 
-
 Functions and classes
 ---------------------
 

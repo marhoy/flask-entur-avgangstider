@@ -16,9 +16,7 @@ class Departure:
 
     @property
     def departure_string(self) -> str:
-        """Format the departure string
-        Returns:
-            A string to be used in the output
+        """The departure time as a string relative to now()
         """
         # How long is it to the departure?
         now = datetime.now(tz=self.departure_datetime.tzinfo)
@@ -32,6 +30,7 @@ class Departure:
 
         return departure_string
 
+    # What a departure looks like if ypu print() it
     def __str__(self):
         return "{:2s} -> {:15s} @ {}".format(
             self.line_name, self.destination, self.departure_string
@@ -59,5 +58,6 @@ class Situation:
         return (self.line_name, self.summary) < \
                (other.line_name, other.summary)
 
+    # What a situation looks like if ypu print() it
     def __str__(self):
         return "{}: {}".format(self.line_name, self.summary)
