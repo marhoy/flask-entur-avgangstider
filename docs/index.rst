@@ -1,7 +1,3 @@
-.. Avgangstider documentation master file, created by
-   sphinx-quickstart on Mon Sep 23 15:28:55 2019.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
 
 ########################################
 Welcome to Avgangstider's documentation!
@@ -16,7 +12,31 @@ Table of contents
    flask_app
    developing
 
-.. include:: readme.rst
+
+Screenshots
+===========
+
+This is what you would see in your browser for Oslo S:
+
+.. image:: _static/Oslo_S.png
+    :width: 80%
+
+...or for Jernbanetorget:
+
+.. image:: _static/Jernbanetorget.png
+    :width: 80%
+
+
+
+Run from Docker container
+=========================
+
+Avgangstider comes with a Docker container ready to run. In order to run your
+own server, just do::
+
+   docker run -d -p 5000:5000 marhoy/avgangstider
+
+You can then access your own server at http://localhost:5000/
 
 
 Indices and tables

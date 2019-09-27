@@ -13,11 +13,18 @@ Setting up your development environment
 ---------------------------------------
  ::
 
+    # Install Python 3.7 and make a new virtual environment
     pyenv install 3.7.4
     pyenv virtualenv 3.7.4 avgangstider
+
+    # Clone the repository
     git clone git@github.com:marhoy/flask-entur-avgangstider.git
+
+    # Activate the virtual environment for this directory
     cd flask-entur-avgangstider
     pyenv local avgangstider 3.7.4
+
+    # Install all requirements (also for development)
     poetry install
 
 
@@ -33,7 +40,7 @@ Run all tests and code checks
 -----------------------------
 
 After having made changes: Make sure all tests are still OK, test coverage
-is 100% and both flake8 and mypy are happy::
+is still 100% and that flake8, mypy and isort are all happy::
 
     tox
 
