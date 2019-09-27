@@ -20,12 +20,13 @@ This is what you would see in your browser for Oslo S:
 
 .. image:: _static/Oslo_S.png
     :width: 80%
+    :align: center
 
 ...or for Jernbanetorget:
 
 .. image:: _static/Jernbanetorget.png
     :width: 80%
-
+    :align: center
 
 
 Run from Docker container
