@@ -1,5 +1,6 @@
 import functools
 from dataclasses import dataclass
+from datetime import datetime
 
 
 @dataclass
@@ -9,13 +10,31 @@ class Departure:
     line_name: str
     destination: str
     platform: str
-    departure_time: str
+    departure_datetime: datetime
     bg_color: str
     fg_color: str
 
+    @property
+    def departure_string(self) -> str:
+        """Format the departure string
+        Returns:
+            A string to be used in the output
+        """
+        # How long is it to the departure?
+        now = datetime.now(tz=self.departure_datetime.tzinfo)
+        minutes = int((self.departure_datetime - now).total_seconds() // 60)
+        if minutes <= 0:
+            departure_string = 'nå'
+        elif minutes <= 30:
+            departure_string = "{} min".format(minutes)
+        else:
+            departure_string = self.departure_datetime.strftime("%H:%M")
+
+        return departure_string
+
     def __str__(self):
         return "{:2s} -> {:15s} @ {}".format(
-            self.line_name, self.destination, self.departure_time
+            self.line_name, self.destination, self.departure_string
         )
 
 

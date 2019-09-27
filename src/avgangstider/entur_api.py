@@ -3,6 +3,7 @@ from datetime import datetime
 from typing import List
 
 from avgangstider import Departure, Situation, entur_query, utils
+from avgangstider.utils import iso_str_to_datetime
 
 # Module wide logger
 LOG = logging.getLogger(__name__)
@@ -49,18 +50,18 @@ def get_departures(stop_id: str,
         fg_color = journey['serviceJourney']['line']['presentation']['textColour']  # noqa
         platform = journey['quay']['id']
         destination = journey['destinationDisplay']['frontText']
-        departure_time_string = journey['expectedDepartureTime']
+        departure_datetime = iso_str_to_datetime(
+            journey['expectedDepartureTime'])
 
         # Skip unwanted platforms
         if platforms and (platform not in platforms):
             continue
 
         # Format departure string and add a departure to the list
-        departure_string = utils.format_departure_string(departure_time_string)
         departure = Departure(line_id=line_id,
                               line_name=line_name,
                               destination=destination,
-                              departure_time=departure_string,
+                              departure_datetime=departure_datetime,
                               platform=platform,
                               fg_color=fg_color,
                               bg_color=bg_color)
@@ -83,10 +84,6 @@ def get_situations(line_ids: List[str],
     """
 
     LOG.debug("Getting situations for lines %s", line_ids)
-
-    # If line_ids is empty or None, return an empty list
-    # if not line_ids:
-    #     return []
 
     query = entur_query.create_situation_query(line_ids)
     json = entur_query.journey_planner_api(query).json()
