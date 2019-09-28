@@ -2,7 +2,7 @@ import re
 from datetime import datetime
 
 
-def iso_str_to_datetime(timestamp_str):
+def iso_str_to_datetime(timestamp_str: str) -> datetime:
     """Convert timestamp string to datetime object
 
     Args:
