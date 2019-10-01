@@ -1,3 +1,4 @@
+
 Developing
 ==========
 
@@ -46,28 +47,33 @@ is still 100% and that flake8, mypy and isort are all happy::
 
     [...]
     src/avgangstider/utils.py .                                              [  6%]
-    tests/test_entur_api.py ...                                              [ 25%]
-    tests/test_entur_query.py ...                                            [ 43%]
-    tests/test_flask_app.py .......                                          [ 87%]
-    tests/test_utils.py ..                                                   [100%]
+    tests/test_classes.py .                                                  [ 12%]
+    tests/test_entur_api.py ...                                              [ 31%]
+    tests/test_entur_query.py ...                                            [ 50%]
+    tests/test_flask_app.py .......                                          [ 93%]
+    tests/test_utils.py .                                                    [100%]
 
     ---------- coverage: platform darwin, python 3.7.4-final-0 -----------
     Name    Stmts   Miss  Cover   Missing
     -------------------------------------
     -------------------------------------
-    TOTAL     195      0   100%
+    TOTAL     197      0   100%
 
-    6 files skipped due to complete coverage.
+    7 files skipped due to complete coverage.
 
 
-    ============================== 16 passed in 4.21s ==============================
-    lint run-test-pre: PYTHONHASHSEED='2636496648'
+    ============================== 16 passed in 4.39s ==============================
+
+    [...]
     lint run-test: commands[0] | poetry run flake8 src tests
     lint run-test: commands[1] | poetry run isort --recursive --check-only src tests
     lint run-test: commands[2] | poetry run mypy src
+
+    [...]
     ___________________________________ summary ____________________________________
       py37: commands succeeded
       lint: commands succeeded
+      docs: commands succeeded
       congratulations :)
 
 
