@@ -20,11 +20,11 @@ class Departure:
         """
         # How long is it to the departure?
         now = datetime.now(tz=self.departure_datetime.tzinfo)
-        minutes = int((self.departure_datetime - now).total_seconds() // 60)
+        minutes = (self.departure_datetime - now).total_seconds() // 60
         if minutes <= 0:
             departure_string = 'nå'
         elif minutes <= 30:
-            departure_string = "{} min".format(minutes)
+            departure_string = "{:.0f} min".format(minutes)
         else:
             departure_string = self.departure_datetime.strftime("%H:%M")
 
