@@ -2,8 +2,23 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+
+    <!-- Automatically reload this page once every day -->
     <meta http-equiv="refresh" content="86400">
-    <title>Avgangstider fra </title>
+
+    <!-- iPhone web app -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style"
+          content="black-translucent">
+
+    <link rel="stylesheet"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+          crossorigin="anonymous">
+
     <link href="/static/css/dinfont.css" rel="stylesheet" type="text/css">
     <link href="/static/css/sismonitor_single.css" rel="stylesheet" type="text/css">
 
@@ -29,11 +44,15 @@
         }
     </script>
 
+    <title>Avgangstider fra </title>
+
 </head>
 
 <body>
+<div class="container-fluid">
     <div id="DepartureTable"></div>
     <div id="Deviations" class="devi-lead"></div>
+</div>
 </body>
 
 </html>

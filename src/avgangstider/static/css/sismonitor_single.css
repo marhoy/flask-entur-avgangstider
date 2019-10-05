@@ -165,11 +165,11 @@ td.devi {
 #dss .control-hover{text-decoration:underline; font-weight:bold;}
 
 .lineNumberBox{
-	width: 82px;
+    width: 60px;
 	text-align:center;
 }
 .linenumbercol{
-    width:82px;
+    width: 60px;
 }
 .departurecol{
 	background: #252525;
