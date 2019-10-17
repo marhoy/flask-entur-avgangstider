@@ -11,15 +11,15 @@ requests = "^2.22"
 gunicorn = {version = "^19.9", optional = true}
 
 [tool.poetry.dev-dependencies]
-pytest = "^5"
-pytest-cov = "^2"
-pytest-flask = "^0"
-flake8 = "^3"
-tox = "^3"
-isort = "^4"
-sphinx = "^2"
-mypy = "^0"
-sphinx-rtd-theme = "^0"
+pytest = "*"
+pytest-cov = "*"
+pytest-flask = "*"
+flake8 = "*"
+tox = "*"
+isort = "*"
+sphinx = "*"
+mypy = "*"
+sphinx-rtd-theme = "*"
 
 [tool.poetry.extras]
 gunicorn = ["gunicorn"]

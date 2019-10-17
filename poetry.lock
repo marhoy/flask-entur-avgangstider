@@ -666,7 +666,7 @@ testing = ["pathlib2", "contextlib2", "unittest2"]
 gunicorn = ["gunicorn"]
 
 [metadata]
-content-hash = "b164b6e101cdc8f998bed6a1a9f164f5db4948eb281d15af190e0fb259049632"
+content-hash = "b3c4c96f81191de5ed59ef9f2b70e31fdff88a6d398175ac7d52c625b706b64c"
 python-versions = "^3.7"
 
 [metadata.files]
