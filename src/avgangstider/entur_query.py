@@ -160,9 +160,10 @@ def journey_planner_api(query: str
     Returns:
         A requests response object
     """
+    import socket
+    client_name = "flask-entur-avgangstider-{}".format(socket.gethostname())
     query_url = r'https://api.entur.io/journey-planner/v2/graphql'
-    headers = {'ET-Client-Name': 'flask - avgangstider_{:03}'.format(
-        random.randint(0, 999))}
+    headers = {'ET-Client-Name': client_name}
     response = requests.post(query_url, headers=headers, json={'query': query})
     response.raise_for_status()
     return response
