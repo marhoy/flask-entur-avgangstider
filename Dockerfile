@@ -1,4 +1,4 @@
-FROM python:3.8-slim-buster
+FROM python:3.7-slim-buster
 
 # Install poetry in the system python
 RUN pip install --upgrade pip && pip install "poetry==1.0.0b3"
@@ -32,5 +32,5 @@ RUN poetry install --no-dev
 EXPOSE 5000
 
 # Run gunicorn
-ENTRYPOINT ["poetry", "run"]
+ENTRYPOINT ["poetry", "run", "--"]
 CMD ["gunicorn", "-c", "src/gunicorn_config.py", "avgangstider.flask_app:create_app()"]
