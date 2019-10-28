@@ -1,7 +1,7 @@
 FROM python:3.8-slim-buster
 
 # Install poetry in the system python
-RUN pip install --upgrade pip && pip install "poetry==0.12.17"
+RUN pip install --upgrade pip && pip install "poetry==1.0.0b3"
 
 # Run everything from here as a non-privileged user
 ENV USERNAME flask
