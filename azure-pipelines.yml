@@ -21,9 +21,9 @@ jobs:
       inputs:
         versionSpec: '$(python.version)'
 
-      - script: pip install tox poetry==1.0.0b8
-        displayName: 'Install Tox and Poetry'
+    - script: pip install tox poetry==1.0.0b8
+      displayName: 'Install Tox and Poetry'
 
-      - script: tox -e py
-        displayName: 'Run tox'
+    - script: tox -e py
+      displayName: 'Run tox'
 
