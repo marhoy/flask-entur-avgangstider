@@ -16,11 +16,6 @@ jobs:
           python.version: '3.7'
 
     steps:
-    - task: UsePythonVersion@0
-      displayName: 'Use Python $(python.version)'
-      inputs:
-        versionSpec: '$(python.version)'
-
     - script: pip install tox poetry==1.0.0b8
       displayName: 'Install Tox and Poetry'
 
