@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "avgangstider"
-version = "0.1.0"
+version = "0.1.1"
 description = "Avgangstider fra EnTur"
 authors = ["Martin Høy <marhoy@gmail.com>"]
 

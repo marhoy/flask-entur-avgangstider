@@ -4,7 +4,7 @@ from avgangstider.classes import Departure, Situation
 from avgangstider.entur_api import get_departures, get_situations
 from avgangstider.flask_app import create_app
 
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 
 # Satisfy the PEP8 linter
 __all__ = ["get_departures", "get_situations", "Departure", "Situation",
