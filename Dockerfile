@@ -1,4 +1,4 @@
-FROM python:3.7-slim-buster
+FROM python:3.8-slim
 
 # Install poetry in the system python
 RUN pip install --upgrade pip && pip install "poetry==1.0.0b3"
