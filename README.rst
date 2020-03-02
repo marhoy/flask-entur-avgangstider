@@ -1,3 +1,5 @@
+![Python tests](https://github.com/marhoy/flask-entur-avgangstider/workflows/Python%20tests/badge.svg)
+
 About
 =====
 
