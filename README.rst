@@ -1,5 +1,5 @@
 
-.. |Flat Badge| image:: https://github.com/marhoy/flask-entur-avgangstider/workflows/Python%20tests/badge.svg
+.. image:: https://github.com/marhoy/flask-entur-avgangstider/workflows/Python%20tests/badge.svg
 
 About
 =====
